@@ -209,44 +209,52 @@ app.post('/api/generate-films', async (req, res) => {
 async function generateFilmSuggestions(mood) {
     const filmDatabase = [
         // Light & Comfort
-        { title: 'Amélie', description: 'Whimsy and magic in ordinary Parisian moments.', year: 2001, director: 'Jean-Pierre Jeunet', tags: ['light', 'comfort', 'contemporary', 'vibrant', 'uplifting', 'talkative'] },
-        { title: 'The Grand Budapest Hotel', description: 'A beautifully composed pastiche of elegance and melancholy.', year: 2014, director: 'Wes Anderson', tags: ['light', 'comfort', 'contemporary', 'social', 'uplifting', 'talkative'] },
-        { title: 'Paddington 2', description: 'Pure-hearted adventure wrapped in British charm.', year: 2017, director: 'Paul King', tags: ['light', 'comfort', 'contemporary', 'social', 'uplifting', 'talkative'] },
+        { title: 'Amélie', description: 'Whimsy and magic in ordinary Parisian moments.', year: 2001, director: 'Jean-Pierre Jeunet', dimensions: { weight: 20, pace: 50, comfort: 85, reality: 30, era: 80, social: 70, tone: 90, dialogue: 75 } },
+        { title: 'The Grand Budapest Hotel', description: 'A beautifully composed pastiche of elegance and melancholy.', year: 2014, director: 'Wes Anderson', dimensions: { weight: 35, pace: 45, comfort: 75, reality: 40, era: 50, social: 70, tone: 75, dialogue: 80 } },
+        { title: 'Paddington 2', description: 'Pure-hearted adventure wrapped in British charm.', year: 2017, director: 'Paul King', dimensions: { weight: 15, pace: 65, comfort: 90, reality: 35, era: 80, social: 85, tone: 95, dialogue: 85 } },
         
         // Heavy & Challenge
-        { title: 'Requiem for a Dream', description: 'Descent into addiction rendered with visceral poetry.', year: 2000, director: 'Darren Aronofsky', tags: ['heavy', 'challenge', 'contemporary', 'solo', 'dark', 'visual'] },
-        { title: 'Come and See', description: 'War through the eyes of a boy—devastating and unforgettable.', year: 1985, director: 'Elem Klimov', tags: ['heavy', 'challenge', 'real', 'dark', 'visual'] },
-        { title: 'Synecdoche, New York', description: 'Reality collapses into art in this labyrinthine meditation.', year: 2008, director: 'Charlie Kaufman', tags: ['heavy', 'challenge', 'dreamlike', 'contemporary', 'dark', 'talkative'] },
+        { title: 'Requiem for a Dream', description: 'Descent into addiction rendered with visceral poetry.', year: 2000, director: 'Darren Aronofsky', dimensions: { weight: 95, pace: 85, comfort: 10, reality: 70, era: 70, social: 20, tone: 10, dialogue: 25 } },
+        { title: 'Come and See', description: 'War through the eyes of a boy—devastating and unforgettable.', year: 1985, director: 'Elem Klimov', dimensions: { weight: 100, pace: 90, comfort: 5, reality: 90, era: 20, social: 40, tone: 5, dialogue: 20 } },
+        { title: 'Synecdoche, New York', description: 'Reality collapses into art in this labyrinthine meditation.', year: 2008, director: 'Charlie Kaufman', dimensions: { weight: 85, pace: 40, comfort: 20, reality: 40, era: 80, social: 60, tone: 25, dialogue: 90 } },
         
         // Slow Burn
-        { title: 'Stalker', description: 'A meditative journey through emotion and existential wonder.', year: 1979, director: 'Andrei Tarkovsky', tags: ['slow', 'dreamlike', 'classic', 'challenge', 'dark', 'visual'] },
-        { title: 'In the Mood for Love', description: 'Repressed desire blooms through frames of saturated color.', year: 2000, director: 'Wong Kar-wai', tags: ['slow', 'dreamlike', 'contemporary', 'romantic', 'uplifting', 'visual'] },
-        { title: 'Tokyo Story', description: 'Profound humanity emerges from quiet domestic moments.', year: 1953, director: 'Yasujirō Ozu', tags: ['slow', 'real', 'classic', 'social', 'uplifting', 'visual'] },
+        { title: 'Stalker', description: 'A meditative journey through emotion and existential wonder.', year: 1979, director: 'Andrei Tarkovsky', dimensions: { weight: 65, pace: 15, comfort: 40, reality: 50, era: 20, social: 30, tone: 50, dialogue: 30 } },
+        { title: 'In the Mood for Love', description: 'Repressed desire blooms through frames of saturated color.', year: 2000, director: 'Wong Kar-wai', dimensions: { weight: 50, pace: 20, comfort: 60, reality: 30, era: 70, social: 35, tone: 70, dialogue: 25 } },
+        { title: 'Tokyo Story', description: 'Profound humanity emerges from quiet domestic moments.', year: 1953, director: 'Yasujirō Ozu', dimensions: { weight: 55, pace: 10, comfort: 65, reality: 95, era: 5, social: 75, tone: 75, dialogue: 70 } },
         
         // Fast Paced
-        { title: 'Parasite', description: 'Class warfare explodes with dark comic energy and precision.', year: 2019, director: 'Bong Joon-ho', tags: ['fast', 'heavy', 'contemporary', 'social', 'dark', 'talkative'] },
-        { title: 'Mad Max: Fury Road', description: 'Pure kinetic poetry—a two-hour chase driven by visual perfection.', year: 2015, director: 'George Miller', tags: ['fast', 'heavy', 'contemporary', 'challenge', 'dark', 'visual'] },
-        { title: 'Terminator 2', description: 'Action elevated to art through innovation and precision.', year: 1991, director: 'James Cameron', tags: ['fast', 'challenge', 'contemporary', 'dark', 'visual'] },
+        { title: 'Parasite', description: 'Class warfare explodes with dark comic energy and precision.', year: 2019, director: 'Bong Joon-ho', dimensions: { weight: 75, pace: 85, comfort: 30, reality: 80, era: 90, social: 90, tone: 45, dialogue: 85 } },
+        { title: 'Mad Max: Fury Road', description: 'Pure kinetic poetry—a two-hour chase driven by visual perfection.', year: 2015, director: 'George Miller', dimensions: { weight: 70, pace: 95, comfort: 20, reality: 40, era: 80, social: 60, tone: 35, dialogue: 15 } },
+        { title: 'Terminator 2', description: 'Action elevated to art through innovation and precision.', year: 1991, director: 'James Cameron', dimensions: { weight: 65, pace: 90, comfort: 25, reality: 45, era: 70, social: 40, tone: 30, dialogue: 50 } },
         
         // Dreamlike
-        { title: 'Mulholland Drive', description: 'Dreams collapse into deception in this shimmering fever dream.', year: 2001, director: 'David Lynch', tags: ['dreamlike', 'heavy', 'contemporary', 'solo', 'dark', 'visual'] },
-        { title: 'Pan\'s Labyrinth', description: 'Myth and fascism collide in a haunting visual fantasia.', year: 2006, director: 'Guillermo del Toro', tags: ['dreamlike', 'heavy', 'contemporary', 'challenge', 'dark', 'visual'] },
-        { title: 'The Fountain', description: 'Three eras of love and loss rendered in visual wonder.', year: 2006, director: 'Darren Aronofsky', tags: ['dreamlike', 'heavy', 'contemporary', 'solo', 'dark', 'visual'] },
+        { title: 'Mulholland Drive', description: 'Dreams collapse into deception in this shimmering fever dream.', year: 2001, director: 'David Lynch', dimensions: { weight: 80, pace: 50, comfort: 15, reality: 20, era: 75, social: 25, tone: 20, dialogue: 40 } },
+        { title: 'Pan\'s Labyrinth', description: 'Myth and fascism collide in a haunting visual fantasia.', year: 2006, director: 'Guillermo del Toro', dimensions: { weight: 75, pace: 60, comfort: 30, reality: 25, era: 70, social: 45, tone: 30, dialogue: 50 } },
+        { title: 'The Fountain', description: 'Three eras of love and loss rendered in visual wonder.', year: 2006, director: 'Darren Aronofsky', dimensions: { weight: 80, pace: 45, comfort: 35, reality: 25, era: 60, social: 20, tone: 50, dialogue: 25 } },
         
         // Real & Contemporary
-        { title: 'Before Sunrise', description: 'Two strangers discover connection through language and presence.', year: 1995, director: 'Richard Linklater', tags: ['real', 'contemporary', 'solo', 'slow', 'uplifting', 'talkative'] },
-        { title: 'Boyhood', description: 'Twelve years of life captured with intimate authenticity.', year: 2014, director: 'Richard Linklater', tags: ['real', 'contemporary', 'slow', 'social', 'uplifting', 'talkative'] },
-        { title: 'Moonlight', description: 'Three moments in a life rendered with poetic grace.', year: 2016, director: 'Barry Jenkins', tags: ['real', 'contemporary', 'slow', 'solo', 'uplifting', 'visual'] },
+        { title: 'Before Sunrise', description: 'Two strangers discover connection through language and presence.', year: 1995, director: 'Richard Linklater', dimensions: { weight: 40, pace: 25, comfort: 70, reality: 95, era: 60, social: 85, tone: 85, dialogue: 95 } },
+        { title: 'Boyhood', description: 'Twelve years of life captured with intimate authenticity.', year: 2014, director: 'Richard Linklater', dimensions: { weight: 50, pace: 20, comfort: 70, reality: 95, era: 90, social: 80, tone: 75, dialogue: 85 } },
+        { title: 'Moonlight', description: 'Three moments in a life rendered with poetic grace.', year: 2016, director: 'Barry Jenkins', dimensions: { weight: 60, pace: 25, comfort: 65, reality: 85, era: 85, social: 50, tone: 70, dialogue: 35 } },
         
         // Classic
-        { title: 'The Seventh Seal', description: 'A knight confronts mortality with quiet philosophical grace.', year: 1957, director: 'Ingmar Bergman', tags: ['classic', 'heavy', 'challenge', 'slow', 'dark', 'visual'] },
-        { title: 'Vertigo', description: 'Obsession rendered as visual mastery and psychological torment.', year: 1958, director: 'Alfred Hitchcock', tags: ['classic', 'challenge', 'slow', 'solo', 'dark', 'visual'] },
-        { title: 'Casablanca', description: 'Sacrifice and romance amid wartime intrigue.', year: 1942, director: 'Michael Curtiz', tags: ['classic', 'heavy', 'social', 'romantic', 'uplifting', 'talkative'] },
+        { title: 'The Seventh Seal', description: 'A knight confronts mortality with quiet philosophical grace.', year: 1957, director: 'Ingmar Bergman', dimensions: { weight: 70, pace: 20, comfort: 30, reality: 70, era: 5, social: 50, tone: 40, dialogue: 80 } },
+        { title: 'Vertigo', description: 'Obsession rendered as visual mastery and psychological torment.', year: 1958, director: 'Alfred Hitchcock', dimensions: { weight: 75, pace: 60, comfort: 20, reality: 60, era: 5, social: 30, tone: 25, dialogue: 60 } },
+        { title: 'Casablanca', description: 'Sacrifice and romance amid wartime intrigue.', year: 1942, director: 'Michael Curtiz', dimensions: { weight: 65, pace: 55, comfort: 40, reality: 60, era: 5, social: 85, tone: 60, dialogue: 90 } },
         
         // Social
-        { title: 'Chungking Express', description: 'Chance encounters blossom into unexpected romance.', year: 1994, director: 'Wong Kar-wai', tags: ['social', 'dreamlike', 'contemporary', 'light', 'uplifting', 'visual'] },
-        { title: 'Memories of Murder', description: 'A procedural spiral into darkness and moral ambiguity.', year: 2003, director: 'Bong Joon-ho', tags: ['social', 'heavy', 'contemporary', 'challenge', 'dark', 'talkative'] },
-        { title: 'La La Land', description: 'Romance and ambition dance through a modern city.', year: 2016, director: 'Damien Chazelle', tags: ['social', 'light', 'contemporary', 'romantic', 'uplifting', 'talkative'] }
+        { title: 'Chungking Express', description: 'Chance encounters blossom into unexpected romance.', year: 1994, director: 'Wong Kar-wai', dimensions: { weight: 40, pace: 55, comfort: 70, reality: 35, era: 60, social: 80, tone: 80, dialogue: 25 } },
+        { title: 'Memories of Murder', description: 'A procedural spiral into darkness and moral ambiguity.', year: 2003, director: 'Bong Joon-ho', dimensions: { weight: 80, pace: 70, comfort: 25, reality: 85, era: 75, social: 75, tone: 30, dialogue: 85 } },
+        { title: 'La La Land', description: 'Romance and ambition dance through a modern city.', year: 2016, director: 'Damien Chazelle', dimensions: { weight: 45, pace: 65, comfort: 75, reality: 50, era: 90, social: 85, tone: 85, dialogue: 80 } },
+        
+        // Additional titles for more diversity
+        { title: 'Blade Runner 2049', description: 'Neo-noir meditation on memory and humanity in a decaying future.', year: 2017, director: 'Denis Villeneuve', dimensions: { weight: 65, pace: 40, comfort: 20, reality: 35, era: 90, social: 20, tone: 35, dialogue: 20 } },
+        { title: 'Eternal Sunshine of the Spotless Mind', description: 'A journey through memory erasing love and loss.', year: 2004, director: 'Michel Gondry', dimensions: { weight: 65, pace: 50, comfort: 50, reality: 40, era: 80, social: 40, tone: 60, dialogue: 75 } },
+        { title: 'Spirited Away', description: 'A girl navigates a magical bathhouse in this animated masterpiece.', year: 2001, director: 'Hayao Miyazaki', dimensions: { weight: 50, pace: 70, comfort: 60, reality: 20, era: 70, social: 70, tone: 75, dialogue: 70 } },
+        { title: 'Inception', description: 'A heist into the architecture of dreams and the subconscious.', year: 2010, director: 'Christopher Nolan', dimensions: { weight: 65, pace: 85, comfort: 40, reality: 35, era: 85, social: 60, tone: 60, dialogue: 80 } },
+        { title: 'The Lighthouse', description: 'Two men descend into madness in isolation on a rocky island.', year: 2019, director: 'Robert Eggers', dimensions: { weight: 85, pace: 50, comfort: 10, reality: 50, era: 15, social: 10, tone: 20, dialogue: 75 } },
+        { title: 'Good as It Gets', description: 'A curmudgeon finds unexpected connections and warmth.', year: 1997, director: 'James L. Brooks', dimensions: { weight: 35, pace: 55, comfort: 70, reality: 75, era: 70, social: 85, tone: 80, dialogue: 90 } }
     ];
 
     // Merge with TMDb films for expanded library
@@ -257,72 +265,93 @@ async function generateFilmSuggestions(mood) {
     const scoredFilms = mergedDatabase.map(film => {
         let score = 0;
 
-        // Weight: light (0-40) vs heavy (60-100)
-        if (film.tags.includes('light')) {
-            score += Math.max(0, 40 - mood.weight) / 20; // peaks at weight=0
-        }
-        if (film.tags.includes('heavy')) {
-            score += Math.max(0, mood.weight - 60) / 20; // peaks at weight=100
+        if (film.dimensions) {
+            // Direct dimensional matching with smooth scaling
+            const dims = film.dimensions;
+            const moodValues = [mood.weight, mood.pace, mood.comfort, mood.reality, mood.era, mood.social, mood.tone, mood.dialogue];
+            const filmValues = [dims.weight, dims.pace, dims.comfort, dims.reality, dims.era, dims.social, dims.tone, dims.dialogue];
+            
+            // Calculate Euclidean distance for overall mood compatibility
+            let distanceScore = 0;
+            for (let i = 0; i < moodValues.length; i++) {
+                const diff = Math.abs(moodValues[i] - filmValues[i]);
+                // Smoother scoring: closer = higher score (100 - diff)
+                distanceScore += (100 - diff) / 8; // Normalize by dividing by number of dimensions
+            }
+            
+            score += distanceScore * 1.5; // Weight dimensional matching heavily
+        } else if (film.tags) {
+            // Fallback to tag-based scoring for TMDb films
+            // Weight: light (0-40) vs heavy (60-100)
+            if (film.tags.includes('light')) {
+                score += Math.max(0, 40 - mood.weight) / 20;
+            }
+            if (film.tags.includes('heavy')) {
+                score += Math.max(0, mood.weight - 60) / 20;
+            }
+
+            // Pace: slow (0-40) vs fast (60-100)
+            if (film.tags.includes('slow')) {
+                score += Math.max(0, 40 - mood.pace) / 20;
+            }
+            if (film.tags.includes('fast')) {
+                score += Math.max(0, mood.pace - 60) / 20;
+            }
+
+            // Comfort: challenge (0-40) vs light/comfort (60-100)
+            if (film.tags.includes('challenge')) {
+                score += Math.max(0, 40 - mood.comfort) / 20;
+            }
+            if (film.tags.includes('light')) {
+                score += Math.max(0, mood.comfort - 60) / 20;
+            }
+
+            // Reality: dreamlike (0-40) vs real (60-100)
+            if (film.tags.includes('dreamlike')) {
+                score += Math.max(0, 40 - mood.reality) / 20;
+            }
+            if (film.tags.includes('real')) {
+                score += Math.max(0, mood.reality - 60) / 20;
+            }
+
+            // Era: classic (0-40) vs contemporary (60-100)
+            if (film.tags.includes('classic')) {
+                score += Math.max(0, 40 - mood.era) / 20;
+            }
+            if (film.tags.includes('contemporary')) {
+                score += Math.max(0, mood.era - 60) / 20;
+            }
+
+            // Social: solo (0-40) vs social (60-100)
+            if (film.tags.includes('solo')) {
+                score += Math.max(0, 40 - mood.social) / 20;
+            }
+            if (film.tags.includes('social')) {
+                score += Math.max(0, mood.social - 60) / 20;
+            }
+
+            // Tone: dark (0-40) vs uplifting (60-100)
+            if (film.tags.includes('dark')) {
+                score += Math.max(0, 40 - mood.tone) / 20;
+            }
+            if (film.tags.includes('uplifting')) {
+                score += Math.max(0, mood.tone - 60) / 20;
+            }
+
+            // Dialogue: minimal (0-40) vs talkative (60-100)
+            if (film.tags.includes('visual')) {
+                score += Math.max(0, 40 - mood.dialogue) / 20;
+            }
+            if (film.tags.includes('talkative')) {
+                score += Math.max(0, mood.dialogue - 60) / 20;
+            }
         }
 
-        // Pace: slow (0-40) vs fast (60-100)
-        if (film.tags.includes('slow')) {
-            score += Math.max(0, 40 - mood.pace) / 20; // peaks at pace=0
-        }
-        if (film.tags.includes('fast')) {
-            score += Math.max(0, mood.pace - 60) / 20; // peaks at pace=100
-        }
-
-        // Comfort: challenge (0-40) vs light/comfort (60-100)
-        if (film.tags.includes('challenge')) {
-            score += Math.max(0, 40 - mood.comfort) / 20; // peaks at comfort=0
-        }
-        if (film.tags.includes('light')) {
-            score += Math.max(0, mood.comfort - 60) / 20; // peaks at comfort=100
-        }
-
-        // Reality: dreamlike (0-40) vs real (60-100)
-        if (film.tags.includes('dreamlike')) {
-            score += Math.max(0, 40 - mood.reality) / 20; // peaks at reality=0
-        }
-        if (film.tags.includes('real')) {
-            score += Math.max(0, mood.reality - 60) / 20; // peaks at reality=100
-        }
-
-        // Era: classic (0-40) vs contemporary (60-100)
-        if (film.tags.includes('classic')) {
-            score += Math.max(0, 40 - mood.era) / 20; // peaks at era=0
-        }
-        if (film.tags.includes('contemporary')) {
-            score += Math.max(0, mood.era - 60) / 20; // peaks at era=100
-        }
-
-        // Social: solo (0-40) vs social (60-100)
-        if (film.tags.includes('solo')) {
-            score += Math.max(0, 40 - mood.social) / 20; // peaks at social=0
-        }
-        if (film.tags.includes('social')) {
-            score += Math.max(0, mood.social - 60) / 20; // peaks at social=100
-        }
-
-        // Tone: dark (0-40) vs uplifting (60-100)
-        if (film.tags.includes('dark')) {
-            score += Math.max(0, 40 - mood.tone) / 20; // peaks at tone=0
-        }
-        if (film.tags.includes('uplifting')) {
-            score += Math.max(0, mood.tone - 60) / 20; // peaks at tone=100
-        }
-
-        // Dialogue: minimal (0-40) vs talkative (60-100)
-        if (film.tags.includes('visual')) {
-            score += Math.max(0, 40 - mood.dialogue) / 20; // peaks at dialogue=0
-        }
-        if (film.tags.includes('talkative')) {
-            score += Math.max(0, mood.dialogue - 60) / 20; // peaks at dialogue=100
-        }
-
-        // Add moderate random variance to create more diversity in results
-        score += Math.random() * 0.5;
+        // Add larger random variance based on mood entropy for more diversity
+        // More extreme moods get less randomness (more focused results)
+        const moodEntropy = (Math.abs(mood.weight - 50) + Math.abs(mood.pace - 50) + Math.abs(mood.comfort - 50) + Math.abs(mood.reality - 50) + Math.abs(mood.era - 50) + Math.abs(mood.social - 50) + Math.abs(mood.tone - 50) + Math.abs(mood.dialogue - 50)) / 8;
+        const randomVariance = (100 - moodEntropy) * 0.08; // Up to 8 points of randomness
+        score += Math.random() * randomVariance;
 
         return { ...film, score };
     });
@@ -331,7 +360,7 @@ async function generateFilmSuggestions(mood) {
     const topFilms = scoredFilms
         .sort((a, b) => b.score - a.score)
         .slice(0, 8)
-        .map(({ score, tags, ...film }) => film);
+        .map(({ score, tags, dimensions, ...film }) => film);
 
     // Fetch posters for all returned films
     const filmsWithPosters = await Promise.all(
