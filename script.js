@@ -1,7 +1,10 @@
 class FilmMoodSelector {
     constructor() {
+        this.setupDarkMode();
         this.setupElements();
+        this.setupGenreSelector();
         this.attachEventListeners();
+        
         this.sliderValues = {
             weight: 50,
             pace: 50,
@@ -10,9 +13,36 @@ class FilmMoodSelector {
             era: 50,
             social: 50
         };
+        
+        this.selectedGenre = 'All';
+        this.currentFilms = [];
         this.uploadedImage = null;
     }
 
+    // ========== DARK MODE ==========
+    setupDarkMode() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        this.setTheme(savedTheme);
+    }
+
+    setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        
+        const toggle = document.getElementById('darkModeToggle');
+        if (toggle) {
+            const icon = toggle.querySelector('.toggle-icon');
+            icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+    }
+
+    toggleDarkMode() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        this.setTheme(newTheme);
+    }
+
+    // ========== ELEMENTS SETUP ==========
     setupElements() {
         // Sliders
         this.sliders = {
@@ -34,72 +64,136 @@ class FilmMoodSelector {
             social: document.getElementById('value-social')
         };
 
-        // Upload
-        this.uploadZone = document.getElementById('uploadZone');
-        this.fileInput = document.getElementById('fileInput');
-        this.uploadPreview = document.getElementById('uploadPreview');
-        this.previewImage = document.getElementById('previewImage');
-
         // Buttons & Sections
         this.discoverBtn = document.getElementById('discoverBtn');
         this.resultsSection = document.getElementById('resultsSection');
         this.resultsContainer = document.getElementById('resultsContainer');
+        
+        // Modal
+        this.modal = document.getElementById('movieModal');
+        this.modalBackdrop = this.modal?.querySelector('.modal-backdrop');
+        this.modalClose = this.modal?.querySelector('.modal-close');
     }
 
-    attachEventListeners() {
-        // Slider updates
-        Object.entries(this.sliders).forEach(([key, slider]) => {
-            slider.addEventListener('input', (e) => this.updateSlider(key, e.target.value));
+    // ========== GENRE SELECTOR ==========
+    setupGenreSelector() {
+        const chips = document.querySelectorAll('.genre-chip');
+        chips.forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                // Remove active from all
+                chips.forEach(c => c.classList.remove('active'));
+                // Add active to clicked
+                chip.classList.add('active');
+                // Update selected genre
+                this.selectedGenre = chip.getAttribute('data-genre');
+            });
         });
+    }
 
-        // Upload
-        this.uploadZone.addEventListener('click', () => this.fileInput.click());
-        this.uploadZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            this.uploadZone.style.borderColor = 'var(--accent)';
-        });
-        this.uploadZone.addEventListener('dragleave', () => {
-            this.uploadZone.style.borderColor = 'var(--accent-light)';
-        });
-        this.uploadZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            this.uploadZone.style.borderColor = 'var(--accent-light)';
-            if (e.dataTransfer.files[0]) {
-                this.handleFileUpload(e.dataTransfer.files[0]);
+    // ========== MODAL FUNCTIONS ==========
+    openModal(film) {
+        if (!this.modal) return;
+
+        const modalDetails = this.modal.querySelector('.modal-details');
+        const modalPosterSection = this.modal.querySelector('.modal-poster-section');
+        
+        // Poster
+        const modalPoster = this.modal.querySelector('.modal-poster');
+        if (modalPoster) {
+            if (film.poster) {
+                modalPoster.innerHTML = `<img src="${film.poster}" alt="${film.title}" style="width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">`;
+            } else {
+                modalPoster.innerHTML = '<div style="width: 100%; aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; font-size: 4rem; background: linear-gradient(135deg, var(--accent-light), var(--accent));">🎬</div>';
             }
-        });
+        }
 
-        this.fileInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) {
-                this.handleFileUpload(e.target.files[0]);
+        // Title
+        const modalTitle = this.modal.querySelector('.modal-title');
+        if (modalTitle) modalTitle.textContent = film.title;
+
+        // Metadata
+        const modalMeta = this.modal.querySelector('.modal-metadata');
+        if (modalMeta) modalMeta.textContent = `${film.year} • Directed by ${film.director}`;
+
+        // Description
+        const modalDesc = this.modal.querySelector('.modal-description');
+        if (modalDesc) modalDesc.textContent = film.description;
+
+        // IMDb Link
+        const modalLink = this.modal.querySelector('.modal-link');
+        if (modalLink) {
+            const imdbUrl = `https://www.imdb.com/find?q=${encodeURIComponent(film.title)}`;
+            modalLink.href = imdbUrl;
+            modalLink.target = '_blank';
+            modalLink.textContent = '🔗 Find on IMDb';
+        }
+
+        // Show modal
+        this.modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeModal() {
+        if (this.modal) {
+            this.modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // ========== EVENT LISTENERS ==========
+    attachEventListeners() {
+        // Dark mode toggle
+        const darkToggle = document.getElementById('darkModeToggle');
+        if (darkToggle) {
+            darkToggle.addEventListener('click', () => this.toggleDarkMode());
+        }
+
+        // Slider updates
+        Object.keys(this.sliders).forEach(key => {
+            const slider = this.sliders[key];
+            if (slider) {
+                slider.addEventListener('input', (e) => {
+                    this.sliderValues[key] = parseInt(e.target.value);
+                    if (this.values[key]) {
+                        this.values[key].textContent = this.sliderValues[key];
+                    }
+                });
             }
         });
 
         // Discover button
-        this.discoverBtn.addEventListener('click', () => this.discoverFilms());
+        if (this.discoverBtn) {
+            this.discoverBtn.addEventListener('click', () => this.discoverFilms());
+        }
+
+        // Modal close
+        if (this.modalClose) {
+            this.modalClose.addEventListener('click', () => this.closeModal());
+        }
+
+        // Modal backdrop click
+        if (this.modalBackdrop) {
+            this.modalBackdrop.addEventListener('click', () => this.closeModal());
+        }
+
+        // Prevent modal close when clicking inside modal content
+        const modalContent = this.modal?.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.addEventListener('click', (e) => e.stopPropagation());
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.closeModal();
+        });
     }
 
-    updateSlider(key, value) {
-        this.sliderValues[key] = parseInt(value);
-        this.values[key].textContent = value;
-    }
-
-    handleFileUpload(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.uploadedImage = e.target.result;
-            this.previewImage.src = this.uploadedImage;
-            this.uploadZone.style.display = 'none';
-            this.uploadPreview.style.display = 'flex';
-        };
-        reader.readAsDataURL(file);
-    }
-
+    // ========== DISCOVERY FUNCTIONS ==========
     async discoverFilms() {
         const backendUrl = window.BACKEND_URL || 'http://localhost:3001';
         
         this.discoverBtn.disabled = true;
-        this.discoverBtn.textContent = 'Discovering…';
+        this.discoverBtn.textContent = '🎬 Loading...';
 
         try {
             const response = await fetch(`${backendUrl}/api/generate-films`, {
@@ -112,33 +206,47 @@ class FilmMoodSelector {
             });
 
             const data = await response.json();
-            this.displayResults(data.films || this.getDefaultFilms());
-            this.resultsSection.style.display = 'block';
-            this.resultsSection.scrollIntoView({ behavior: 'smooth' });
+            this.currentFilms = data.films || this.getDefaultFilms();
+            this.displayResults(this.currentFilms);
+            
+            if (this.resultsSection) {
+                this.resultsSection.style.display = 'block';
+                this.resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
         } catch (error) {
-            console.error('Error:', error);
-            this.displayResults(this.getDefaultFilms());
-            this.resultsSection.style.display = 'block';
+            console.error('Error fetching films:', error);
+            this.currentFilms = this.getDefaultFilms();
+            this.displayResults(this.currentFilms);
+            
+            if (this.resultsSection) {
+                this.resultsSection.style.display = 'block';
+            }
         } finally {
             this.discoverBtn.disabled = false;
-            this.discoverBtn.textContent = 'Discover Films';
+            this.discoverBtn.textContent = '🍿 Find My Film';
         }
     }
 
     displayResults(films) {
+        if (!this.resultsContainer) return;
+
         this.resultsContainer.innerHTML = films.map((film, index) => `
             <div class="film-card" style="animation-delay: ${index * 0.1}s">
                 <div class="film-poster">
-                    ${film.poster ? `<img src="${film.poster}" alt="${film.title}">` : '🎬'}
+                    ${film.poster ? `<img src="${film.poster}" alt="${film.title}" crossorigin="anonymous" onerror="this.style.display='none'">` : '🎬'}
                 </div>
                 <div class="film-info">
                     <h3 class="film-title">${film.title}</h3>
                     <p class="film-description">${film.description}</p>
                     <p class="film-metadata">${film.year} • ${film.director}</p>
-                    <a href="#" class="film-action">Explore →</a>
                 </div>
             </div>
         `).join('');
+
+        // Attach click listeners to film cards
+        document.querySelectorAll('.film-card').forEach((card, index) => {
+            card.addEventListener('click', () => this.openModal(films[index]));
+        });
     }
 
     getDefaultFilms() {
@@ -178,6 +286,18 @@ class FilmMoodSelector {
                 description: 'A procedural spiral into darkness and moral ambiguity.',
                 year: 2003,
                 director: 'Bong Joon-ho'
+            },
+            {
+                title: 'Amélie',
+                description: 'Whimsy and magic in ordinary Parisian moments.',
+                year: 2001,
+                director: 'Jean-Pierre Jeunet'
+            },
+            {
+                title: 'The Grand Budapest Hotel',
+                description: 'A beautifully composed pastiche of elegance and melancholy.',
+                year: 2014,
+                director: 'Wes Anderson'
             }
         ];
     }

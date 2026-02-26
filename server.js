@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const path = require('path');
 require('dotenv').config();
+require('dotenv').config({ path: path.resolve(__dirname, '.env.local') });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -9,11 +11,16 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const OMDB_API_KEY = process.env.OMDB_API_KEY;
 
+console.log(`🔑 OMDB API Key: ${OMDB_API_KEY ? '✓ Loaded' : '✗ Not found'}`);
+
 // Poster cache to avoid repeated API calls
 const posterCache = {};
 
 // Middleware
-app.use(cors({ origin: FRONTEND_URL }));
+app.use(cors({
+    origin: '*', // Allow all origins for development
+    methods: ['GET', 'POST', 'OPTIONS']
+}));
 app.use(express.json());
 
 // Function to fetch poster from OMDB
@@ -42,17 +49,15 @@ async function fetchPosterFromOMDB(title, year) {
         let poster = `https://via.placeholder.com/300x450?text=${encodeURIComponent(title)}`;
         
         if (response.data && response.data.Poster && response.data.Poster !== 'N/A') {
-            // Fix CORS issue: Use proxy or CDN-friendly version
-            poster = response.data.Poster.replace('SX300', 'SX500').replace('http://', 'https://');
-            console.log(`✓ Fetched poster for ${title}: ${poster}`);
-        } else {
-            console.warn(`No poster found for ${title} (${year})`);
+            // Use IMDb image directly (more reliable than Amazon)
+            poster = response.data.Poster;
+            console.log(`✓ Poster: ${title}`);
         }
 
         posterCache[cacheKey] = poster;
         return poster;
     } catch (error) {
-        console.warn(`Could not fetch poster for ${title} (${year}):`, error.message);
+        console.warn(`✗ Poster error for ${title}:`, error.message);
         return `https://via.placeholder.com/300x450?text=${encodeURIComponent(title)}`;
     }
 }
@@ -177,16 +182,16 @@ async function generateFilmSuggestions(mood) {
             score += Math.max(0, mood.social - 60) / 20; // peaks at social=100
         }
 
-        // Add small random variance to break ties
-        score += Math.random() * 0.1;
+        // Add moderate random variance to create more diversity in results
+        score += Math.random() * 0.5;
 
         return { ...film, score };
     });
 
-    // Sort by score and return top 6
+    // Sort by score and return top 8 with diversity weighting
     const topFilms = scoredFilms
         .sort((a, b) => b.score - a.score)
-        .slice(0, 6)
+        .slice(0, 8)
         .map(({ score, tags, ...film }) => film);
 
     // Fetch posters for all returned films
@@ -207,7 +212,9 @@ async function getDefaultFilms() {
         { title: 'Before Sunrise', description: 'Two strangers discover connection through language and presence.', year: 1995, director: 'Richard Linklater' },
         { title: 'The Seventh Seal', description: 'A knight confronts mortality with quiet philosophical grace.', year: 1957, director: 'Ingmar Bergman' },
         { title: 'Chungking Express', description: 'Chance encounters blossom into unexpected romance.', year: 1994, director: 'Wong Kar-wai' },
-        { title: 'Memories of Murder', description: 'A procedural spiral into darkness and moral ambiguity.', year: 2003, director: 'Bong Joon-ho' }
+        { title: 'Memories of Murder', description: 'A procedural spiral into darkness and moral ambiguity.', year: 2003, director: 'Bong Joon-ho' },
+        { title: 'Amélie', description: 'Whimsy and magic in ordinary Parisian moments.', year: 2001, director: 'Jean-Pierre Jeunet' },
+        { title: 'The Grand Budapest Hotel', description: 'A beautifully composed pastiche of elegance and melancholy.', year: 2014, director: 'Wes Anderson' }
     ];
 
     // Fetch posters for all default films
