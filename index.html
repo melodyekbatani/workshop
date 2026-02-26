@@ -40,7 +40,6 @@
         }
 
         html, body {
-            background: linear-gradient(180deg, #2a1f15 0%, #1a0f08 40%, #0a0a0a 100%);
             color: var(--white);
             font-family: var(--font-mono);
             overflow-x: hidden;
@@ -48,8 +47,23 @@
         }
 
         body {
-            background-attachment: fixed;
+            background: linear-gradient(
+                135deg,
+                #2a1f15 0%,
+                #1a0f08 25%,
+                #0a0a0a 50%,
+                #1a0f08 75%,
+                #2a1f15 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         body::before {
@@ -150,20 +164,36 @@
         /* ========== TYPOGRAPHY ========== */
         h1 {
             font-family: var(--font-mono);
-            font-size: clamp(56px, 13vw, 140px);
-            font-weight: 700;
-            letter-spacing: 4px;
-            line-height: 1;
+            font-size: clamp(72px, 16vw, 160px);
+            font-weight: 900;
+            letter-spacing: 6px;
+            line-height: 1.1;
             text-transform: uppercase;
+            background: linear-gradient(135deg, var(--gold), var(--white));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 32px;
         }
 
         h2 {
             font-family: var(--font-mono);
-            font-size: clamp(36px, 10vw, 72px);
-            font-weight: 700;
-            letter-spacing: 3px;
+            font-size: clamp(40px, 12vw, 80px);
+            font-weight: 800;
+            letter-spacing: 4px;
             text-transform: uppercase;
             margin-bottom: 64px;
+            color: var(--gold);
+            opacity: 0.95;
+        }
+
+        h3 {
+            font-family: var(--font-mono);
+            font-size: clamp(24px, 6vw, 44px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
             color: var(--white);
         }
 
@@ -279,8 +309,12 @@
                 transform: translateX(0) translateY(0) scale(1) rotate(0deg);
                 opacity: 1;
             }
+            80% {
+                transform: translateX(var(--tx, 400px)) translateY(var(--ty, -800px)) scale(0.3) rotate(1080deg);
+                opacity: 1;
+            }
             100% {
-                transform: translateX(var(--tx, 200px)) translateY(var(--ty, -500px)) scale(0.3) rotate(720deg);
+                transform: translateX(var(--tx, 400px)) translateY(var(--ty, -800px)) scale(0.1) rotate(1440deg);
                 opacity: 0;
             }
         }
@@ -301,9 +335,8 @@
 
         .popcorn-container {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
@@ -317,9 +350,11 @@
 
         .popcorn {
             position: absolute;
-            font-size: 32px;
+            font-size: 120px;
             font-weight: bold;
             will-change: transform, opacity;
+            filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.6));
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
         }
 
         /* ========== MOOD DESCRIPTION MODAL ========== */
@@ -456,7 +491,7 @@
 
         /* ========== HERO SECTION ========== */
         .hero {
-            height: calc(100vh - 100px);
+            height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -504,7 +539,6 @@
 
         .title-match {
             color: var(--accent);
-            animation: glitch 0.3s ease 0.15s 1 forwards;
         }
 
         .hero-tagline {
@@ -1026,9 +1060,9 @@
         /* ========== FOOTER ========== */
         footer {
             background: linear-gradient(180deg, var(--surface) 0%, rgba(20, 20, 20, 0.8) 100%);
-            padding: 120px 0 80px;
+            padding: 100px 0 60px;
             text-align: center;
-            border-top: 1px solid var(--accent);
+            border-top: 2px solid var(--accent);
             font-size: 11px;
             color: var(--text-muted);
             font-family: var(--font-mono);
@@ -1047,7 +1081,29 @@
             right: 0;
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+            opacity: 0.5;
+        }
+
+        footer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
             opacity: 0.3;
+        }
+
+        footer h2 {
+            font-size: 36px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--gold), var(--white));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+            font-weight: 900;
         }
 
         footer p {
@@ -1056,11 +1112,11 @@
             position: relative;
         }
 
-        footer p:first-child {
+        footer p:first-of-type {
             font-weight: 700;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--gold);
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             letter-spacing: 2px;
         }
 
@@ -1541,12 +1597,92 @@
 
 <!-- FOOTER -->
 <footer>
-    <p>🎬 CINEMATCH — PRECISION FILM DISCOVERY</p>
+    <h2>CINEMATCH</h2>
+    <p>🎬 PRECISION FILM DISCOVERY</p>
     <p style="margin-top: 16px; font-size: 10px; letter-spacing: 1px;">POWERED BY ALGORITHMS • IMDB • THE MOVIE DATABASE (TMDB) • AI</p>
 </footer>
 
 <!-- SCRIPT -->
 <script>
+    // ========== POPCORN ANIMATION FUNCTIONS (DEFINED EARLY) ==========
+    function throwPopcorn() {
+        const container = document.getElementById('popcornContainer');
+        container.classList.add('active');
+        
+        // Create 60 popcorn pieces exploding from center
+        for (let i = 0; i < 60; i++) {
+            setTimeout(() => {
+                const pop = document.createElement('div');
+                pop.className = 'popcorn';
+                pop.textContent = '🍿';
+                
+                // Center starting position
+                const startX = window.innerWidth / 2;
+                const startY = window.innerHeight / 2;
+                
+                // Radial burst in all directions - larger spread
+                const angle = (i / 60) * Math.PI * 2;
+                const distance = 800 + Math.random() * 400;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                pop.style.left = startX + 'px';
+                pop.style.top = startY + 'px';
+                pop.style.setProperty('--tx', tx + 'px');
+                pop.style.setProperty('--ty', ty + 'px');
+                pop.style.animation = `popThrow ${10 + Math.random() * 5}s ease-out forwards`;
+                
+                container.appendChild(pop);
+                
+                // Remove element after animation completes
+                setTimeout(() => pop.remove(), 15500);
+            }, i * 20);
+        }
+        
+        // Clear the container after all animations
+        setTimeout(() => {
+            container.classList.remove('active');
+        }, 14000);
+    }
+
+    function throwHeroPopcorn() {
+        const container = document.getElementById('popcornContainer');
+        container.classList.add('active');
+        
+        // Create continuous popcorn burst from hero section
+        for (let i = 0; i < 35; i++) {
+            setTimeout(() => {
+                const pop = document.createElement('div');
+                pop.className = 'popcorn';
+                pop.textContent = '🍿';
+                
+                // Start from various points in viewport
+                const startX = (Math.random() - 0.5) * window.innerWidth;
+                const startY = (Math.random() - 0.5) * 200;
+                
+                // Throw upward and outward
+                const tx = (Math.random() - 0.5) * 600;
+                const ty = -300 - Math.random() * 400;
+                
+                pop.style.left = startX + 'px';
+                pop.style.top = startY + 'px';
+                pop.style.setProperty('--tx', tx + 'px');
+                pop.style.setProperty('--ty', ty + 'px');
+                pop.style.animation = `popThrow ${0.9 + Math.random() * 0.4}s ease-out forwards`;
+                
+                container.appendChild(pop);
+                
+                // Remove element after animation
+                setTimeout(() => pop.remove(), 1400);
+            }, i * 30);
+        }
+        
+        // Clear the container after animation
+        setTimeout(() => {
+            container.classList.remove('active');
+        }, 1200);
+    }
+
     // ========== CUSTOM CURSOR ==========
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorRing = document.querySelector('.cursor-ring');
@@ -1569,6 +1705,24 @@
         requestAnimationFrame(animateDot);
     }
     animateDot();
+
+    // ========== HERO POPCORN ANIMATION ==========
+    let heroPopcornTriggered = false;
+    
+    const heroSection = document.querySelector('.hero');
+    const heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !heroPopcornTriggered) {
+                heroPopcornTriggered = true;
+                // Trigger popcorn after a brief delay
+                setTimeout(() => throwHeroPopcorn(), 500);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    if (heroSection) {
+        heroObserver.observe(heroSection);
+    }
 
     // ========== SCROLL REVEAL ==========
     const observerOptions = {
@@ -1719,39 +1873,76 @@
         const container = document.getElementById('popcornContainer');
         container.classList.add('active');
         
-        // Create 20-30 popcorn pieces
-        for (let i = 0; i < 25; i++) {
+        // Create 40-50 popcorn pieces scattered across screen
+        for (let i = 0; i < 45; i++) {
             setTimeout(() => {
                 const pop = document.createElement('div');
                 pop.className = 'popcorn';
                 pop.textContent = '🍿';
                 
-                // Random start position around center
-                const startX = (Math.random() - 0.5) * 100;
-                const startY = (Math.random() - 0.5) * 100;
+                // Random start position across entire viewport
+                const startX = Math.random() * window.innerWidth - window.innerWidth / 2;
+                const startY = Math.random() * window.innerHeight - window.innerHeight / 2;
                 
-                // Random throw direction
-                const tx = (Math.random() - 0.5) * 400;
-                const ty = -200 - Math.random() * 300;
-                const rotation = Math.random() * 720;
+                // Random throw direction - full screen spread
+                const tx = (Math.random() - 0.5) * 800;
+                const ty = -400 - Math.random() * 500;
                 
                 pop.style.left = startX + 'px';
                 pop.style.top = startY + 'px';
                 pop.style.setProperty('--tx', tx + 'px');
                 pop.style.setProperty('--ty', ty + 'px');
-                pop.style.animation = `popThrow ${0.8 + Math.random() * 0.4}s ease-out forwards`;
+                pop.style.animation = `popThrow ${1 + Math.random() * 0.5}s ease-out forwards`;
                 
                 container.appendChild(pop);
                 
                 // Remove element after animation
-                setTimeout(() => pop.remove(), 1200);
+                setTimeout(() => pop.remove(), 1600);
+            }, i * 25);
+        }
+        
+        // Clear the container after animation
+        setTimeout(() => {
+            container.classList.remove('active');
+        }, 1300);
+    }
+
+    function throwHeroPopcorn() {
+        const container = document.getElementById('popcornContainer');
+        container.classList.add('active');
+        
+        // Create continuous popcorn burst from hero section
+        for (let i = 0; i < 35; i++) {
+            setTimeout(() => {
+                const pop = document.createElement('div');
+                pop.className = 'popcorn';
+                pop.textContent = '🍿';
+                
+                // Start from various points in viewport
+                const startX = (Math.random() - 0.5) * window.innerWidth;
+                const startY = (Math.random() - 0.5) * 200;
+                
+                // Throw upward and outward
+                const tx = (Math.random() - 0.5) * 600;
+                const ty = -300 - Math.random() * 400;
+                
+                pop.style.left = startX + 'px';
+                pop.style.top = startY + 'px';
+                pop.style.setProperty('--tx', tx + 'px');
+                pop.style.setProperty('--ty', ty + 'px');
+                pop.style.animation = `popThrow ${0.9 + Math.random() * 0.4}s ease-out forwards`;
+                
+                container.appendChild(pop);
+                
+                // Remove element after animation
+                setTimeout(() => pop.remove(), 1400);
             }, i * 30);
         }
         
         // Clear the container after animation
         setTimeout(() => {
             container.classList.remove('active');
-        }, 1000);
+        }, 1200);
     }
 
     // ========== CTA BUTTON ==========

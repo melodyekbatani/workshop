@@ -122,7 +122,50 @@ app.get('/api/health', (req, res) => {
 });
 
 // Generate mood description endpoint
-app.post('/api/mood-description', (req, res) => {
+// Generate AI mood analysis using Hugging Face API
+async function generateAIMoodDescription(mood) {
+    // Fallback descriptions in case API fails
+    const fallbackDescriptions = [
+        "Your vibe calls for cinema that understands you—something that bends reality just enough to make the ordinary extraordinary.",
+        "Tonight you're seeking the kind of story that mirrors the way you feel: intimate, haunting, and yet somehow perfect.",
+        "Your mood speaks to films that don't just entertain, but transform the way you see the world.",
+        "This is a moment for cinema that feels like a conversation between your heart and the screen.",
+        "You're looking for something that moves at the rhythm of your thoughts—unpredictable, immersive, unforgettable."
+    ];
+
+    if (!HUGGINGFACE_API_KEY) {
+        return fallbackDescriptions[Math.floor(Math.random() * fallbackDescriptions.length)];
+    }
+
+    try {
+        const moodString = `Weight: ${mood.weight}/100 (emotional intensity), Pace: ${mood.pace}/100 (fast), Comfort: ${mood.comfort}/100 (challenge vs comfort), Reality: ${mood.reality}/100 (dreamlike), Era: ${mood.era}/100 (modern), Social: ${mood.social}/100 (group), Tone: ${mood.tone}/100 (uplifting), Dialogue: ${mood.dialogue}/100 (verbose)`;
+        
+        const prompt = `Based on this mood profile: ${moodString}. Generate a single, poetic sentence (under 20 words) describing the perfect film experience for someone with this exact mood. Be personal, artistic, and evocative. No preamble, just the sentence.`;
+
+        const response = await axios.post(
+            'https://api-inference.huggingface.co/models/gpt2',
+            { inputs: prompt, parameters: { max_new_tokens: 50 } },
+            {
+                headers: { Authorization: `Bearer ${HUGGINGFACE_API_KEY}` },
+                timeout: 5000
+            }
+        );
+
+        if (response.data && response.data[0] && response.data[0].generated_text) {
+            const text = response.data[0].generated_text;
+            // Extract the generated part (after the prompt)
+            const generatedPart = text.split(prompt).pop().trim();
+            return generatedPart || fallbackDescriptions[Math.floor(Math.random() * fallbackDescriptions.length)];
+        }
+
+        return fallbackDescriptions[Math.floor(Math.random() * fallbackDescriptions.length)];
+    } catch (error) {
+        console.warn('HuggingFace API error:', error.message);
+        return fallbackDescriptions[Math.floor(Math.random() * fallbackDescriptions.length)];
+    }
+}
+
+app.post('/api/mood-description', async (req, res) => {
     try {
         const { mood } = req.body;
 
@@ -130,84 +173,16 @@ app.post('/api/mood-description', (req, res) => {
             return res.status(400).json({ error: 'Mood data is required' });
         }
 
-        // Generate descriptive mood statement based on slider values
-        let description = 'Your mood tonight: ';
-        const parts = [];
-
-        // Weight: emotional heaviness
-        if (mood.weight < 40) {
-            parts.push('something light and easy');
-        } else if (mood.weight > 60) {
-            parts.push('something emotionally heavy');
-        } else {
-            parts.push('a balanced emotional experience');
-        }
-
-        // Pace
-        if (mood.pace < 40) {
-            parts.push('slow-paced');
-        } else if (mood.pace > 60) {
-            parts.push('fast-moving');
-        } else {
-            parts.push('moderate pacing');
-        }
-
-        // Tone
-        if (mood.tone < 40) {
-            parts.push('with a darker, serious edge');
-        } else if (mood.tone > 60) {
-            parts.push('that lifts your spirits');
-        } else {
-            parts.push('with balanced tones');
-        }
-
-        // Dialogue
-        if (mood.dialogue < 40) {
-            parts.push('driven by visuals and atmosphere');
-        } else if (mood.dialogue > 60) {
-            parts.push('rich with dialogue and conversation');
-        } else {
-            parts.push('with good balance between dialogue and visuals');
-        }
-
-        // Reality (dreamlike)
-        if (mood.reality < 40) {
-            parts.push('that blurs between dreams and reality');
-        } else if (mood.reality > 60) {
-            parts.push('grounded in authentic realism');
-        } else {
-            parts.push('with a touch of surrealism');
-        }
-
-        // Era
-        if (mood.era < 40) {
-            parts.push('a classic masterpiece');
-        } else if (mood.era > 60) {
-            parts.push('a contemporary production');
-        } else {
-            parts.push('from any era');
-        }
-
-        // Social
-        if (mood.social < 40) {
-            parts.push('perfect for a solo experience');
-        } else if (mood.social > 60) {
-            parts.push('brilliant for group viewing');
-        } else {
-            parts.push('works for any viewing scenario');
-        }
-
-        description = parts.join(', ').replace(/,(?!.*,)/g, ' that\'s') + '.';
-        description = description.replace(/, that\'s/g, ', and that\'s');
-        description = description.split(',').slice(0, -1).join(',') + ' ' + description.split(',').slice(-1)[0];
-
-        // Simpler approach
-        description = `Your mood tonight calls for ${parts[0]}, ${parts[1]}, ${parts[2]}, and ${parts[3]}.`;
+        // Try to get AI-generated description
+        const description = await generateAIMoodDescription(mood);
 
         res.json({ description, success: true });
     } catch (error) {
         console.error('Error:', error);
-        res.json({ description: 'A film perfectly matched to your mood.', fallback: true });
+        res.json({ 
+            description: 'Your mood speaks to cinema that understands you—something truly special awaits.', 
+            fallback: true 
+        });
     }
 });
 
