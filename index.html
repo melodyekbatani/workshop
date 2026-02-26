@@ -99,25 +99,11 @@
         }
 
         .cursor-dot {
-            position: fixed;
-            width: 12px;
-            height: 12px;
-            background: var(--gold);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            mix-blend-mode: screen;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+            display: none;
         }
 
         .cursor-ring {
-            position: fixed;
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--accent);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
+            display: none;
             opacity: 0.6;
             mix-blend-mode: screen;
         }
@@ -164,9 +150,9 @@
         /* ========== TYPOGRAPHY ========== */
         h1 {
             font-family: var(--font-mono);
-            font-size: clamp(72px, 16vw, 160px);
+            font-size: clamp(68px, 15vw, 140px);
             font-weight: 900;
-            letter-spacing: 6px;
+            letter-spacing: 8px;
             line-height: 1.1;
             text-transform: uppercase;
             background: linear-gradient(135deg, var(--gold), var(--white));
@@ -178,20 +164,20 @@
 
         h2 {
             font-family: var(--font-mono);
-            font-size: clamp(40px, 12vw, 80px);
+            font-size: clamp(40px, 12vw, 72px);
             font-weight: 800;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             text-transform: uppercase;
-            margin-bottom: 64px;
+            margin-bottom: 48px;
             color: var(--gold);
             opacity: 0.95;
         }
 
         h3 {
             font-family: var(--font-mono);
-            font-size: clamp(24px, 6vw, 44px);
+            font-size: clamp(20px, 5vw, 36px);
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             margin-bottom: 24px;
             color: var(--white);
@@ -199,15 +185,16 @@
 
         p {
             font-family: var(--font-mono);
-            line-height: 1.6;
-            font-size: 14px;
+            line-height: 1.7;
+            font-size: 11px;
             text-transform: uppercase;
             font-weight: 500;
+            letter-spacing: 1px;
         }
 
         .eyebrow {
             font-family: var(--font-mono);
-            font-size: 12px;
+            font-size: 9px;
             letter-spacing: 2px;
             color: var(--gold);
             text-transform: uppercase;
@@ -522,10 +509,11 @@
         }
 
         .hero-title {
-            font-size: clamp(60px, 15vw, 140px);
-            letter-spacing: 12px;
+            font-size: clamp(72px, 18vw, 156px);
+            letter-spacing: 14px;
             text-transform: uppercase;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
+            font-weight: 900;
         }
 
         .title-cine {
@@ -542,18 +530,18 @@
         }
 
         .hero-tagline {
-            font-size: 18px;
+            font-size: 14px;
             font-family: var(--font-mono);
-            margin: 24px 0;
+            margin: 32px 0 24px;
             color: var(--gold);
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             animation: fadeUpSlide 1s ease-out 0.2s both;
             text-transform: uppercase;
             font-weight: 700;
         }
 
         .hero-subtitle {
-            font-size: 13px;
+            font-size: 11px;
             color: var(--text-secondary);
             margin-bottom: 0;
             animation: fadeUpSlide 1s ease-out 0.4s both;
@@ -562,9 +550,9 @@
             margin-right: auto;
             font-family: var(--font-mono);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             font-weight: 500;
-            line-height: 1.7;
+            line-height: 1.8;
         }
 
         .hero-pulse-ring {
@@ -726,8 +714,8 @@
         .vibes-intro {
             max-width: 800px;
             margin-bottom: 56px;
-            opacity: 0.85;
-            font-size: 16px;
+            opacity: 0.8;
+            font-size: 12px;
             line-height: 1.8;
             color: var(--text-secondary);
         }
@@ -748,13 +736,16 @@
         .slider-card {
             background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 32px;
-            min-height: 160px;
+            border-radius: 12px;
+            padding: 40px 36px;
+            min-height: 180px;
             position: relative;
             overflow: hidden;
             animation: fadeUpSlide 0.8s ease-out backwards;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .slider-card:nth-child(1) { animation-delay: 0.1s; }
@@ -763,6 +754,30 @@
         .slider-card:nth-child(4) { animation-delay: 0.4s; }
         .slider-card:nth-child(5) { animation-delay: 0.5s; }
         .slider-card:nth-child(6) { animation-delay: 0.6s; }
+        .slider-card:nth-child(7) { animation-delay: 0.7s; }
+        .slider-card:nth-child(8) { animation-delay: 0.8s; }
+
+        .slider-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .slider-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 12px 40px rgba(184, 37, 30, 0.2), inset 0 0 20px rgba(212, 175, 55, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .slider-card:hover::before {
+            opacity: 1;
+        }
 
         .slider-card.dragging {
             border-color: var(--accent);
@@ -773,26 +788,26 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
-            gap: 12px;
+            margin-bottom: 24px;
+            gap: 16px;
         }
 
         .slider-emoji {
-            font-size: 28px;
+            font-size: 32px;
             flex-shrink: 0;
         }
 
         .slider-labels {
             display: flex;
             justify-content: center;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--white);
-            margin-bottom: 12px;
             flex-grow: 1;
-            font-weight: 500;
+            font-weight: 700;
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            line-height: 1.5;
         }
 
         .slider-track {
@@ -837,14 +852,7 @@
         }
 
         .slider-value {
-            font-family: var(--font-display);
-            font-size: clamp(48px, 10vw, 72px);
-            font-weight: 400;
-            color: var(--lime);
-            letter-spacing: 4px;
-            text-align: right;
-            margin-top: 16px;
-            transition: transform 0.1s;
+            display: none;
         }
 
         .slider-value.pulse {
@@ -868,12 +876,12 @@
 
         .cta-copy {
             font-family: var(--font-mono);
-            font-size: 36px;
-            margin-bottom: 40px;
-            line-height: 1.5;
+            font-size: clamp(42px, 12vw, 64px);
+            margin-bottom: 56px;
+            line-height: 1.4;
             color: var(--white);
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-weight: 800;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
 
@@ -918,13 +926,14 @@
         }
 
         .cta-subtext {
-            margin-top: 32px;
-            font-size: 11px;
-            color: var(--text-muted);
+            margin-top: 48px;
+            font-size: 10px;
+            color: var(--text-secondary);
             letter-spacing: 2px;
             text-transform: uppercase;
             font-family: var(--font-mono);
             font-weight: 600;
+            line-height: 1.6;
         }
 
         /* ========== RESULTS SECTION ========== */
@@ -1059,7 +1068,16 @@
 
         /* ========== FOOTER ========== */
         footer {
-            background: linear-gradient(180deg, var(--surface) 0%, rgba(20, 20, 20, 0.8) 100%);
+            background: linear-gradient(
+                135deg,
+                #2a1f15 0%,
+                #1a0f08 25%,
+                #0a0a0a 50%,
+                #1a0f08 75%,
+                #2a1f15 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             padding: 100px 0 60px;
             text-align: center;
             border-top: 2px solid var(--accent);
@@ -1269,13 +1287,13 @@
         }
 
         .modal-details h2 {
-            font-size: 32px;
-            margin-bottom: 16px;
+            font-size: 36px;
+            margin-bottom: 24px;
             color: var(--gold);
             font-family: var(--font-mono);
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
 
         .modal-meta {
@@ -1298,6 +1316,10 @@
             color: var(--text-secondary);
             line-height: 1.7;
             margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         /* Mobile Modal */
@@ -1604,125 +1626,51 @@
 
 <!-- SCRIPT -->
 <script>
-    // ========== POPCORN ANIMATION FUNCTIONS (DEFINED EARLY) ==========
-    function throwPopcorn() {
-        const container = document.getElementById('popcornContainer');
-        container.classList.add('active');
-        
-        // Create 60 popcorn pieces exploding from center
-        for (let i = 0; i < 60; i++) {
-            setTimeout(() => {
-                const pop = document.createElement('div');
-                pop.className = 'popcorn';
-                pop.textContent = '🍿';
-                
-                // Center starting position
-                const startX = window.innerWidth / 2;
-                const startY = window.innerHeight / 2;
-                
-                // Radial burst in all directions - larger spread
-                const angle = (i / 60) * Math.PI * 2;
-                const distance = 800 + Math.random() * 400;
-                const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance;
-                
-                pop.style.left = startX + 'px';
-                pop.style.top = startY + 'px';
-                pop.style.setProperty('--tx', tx + 'px');
-                pop.style.setProperty('--ty', ty + 'px');
-                pop.style.animation = `popThrow ${10 + Math.random() * 5}s ease-out forwards`;
-                
-                container.appendChild(pop);
-                
-                // Remove element after animation completes
-                setTimeout(() => pop.remove(), 15500);
-            }, i * 20);
-        }
-        
-        // Clear the container after all animations
-        setTimeout(() => {
-            container.classList.remove('active');
-        }, 14000);
-    }
+    // Popcorn functions removed - cursor trail now shows popcorn
 
-    function throwHeroPopcorn() {
-        const container = document.getElementById('popcornContainer');
-        container.classList.add('active');
-        
-        // Create continuous popcorn burst from hero section
-        for (let i = 0; i < 35; i++) {
-            setTimeout(() => {
-                const pop = document.createElement('div');
-                pop.className = 'popcorn';
-                pop.textContent = '🍿';
-                
-                // Start from various points in viewport
-                const startX = (Math.random() - 0.5) * window.innerWidth;
-                const startY = (Math.random() - 0.5) * 200;
-                
-                // Throw upward and outward
-                const tx = (Math.random() - 0.5) * 600;
-                const ty = -300 - Math.random() * 400;
-                
-                pop.style.left = startX + 'px';
-                pop.style.top = startY + 'px';
-                pop.style.setProperty('--tx', tx + 'px');
-                pop.style.setProperty('--ty', ty + 'px');
-                pop.style.animation = `popThrow ${0.9 + Math.random() * 0.4}s ease-out forwards`;
-                
-                container.appendChild(pop);
-                
-                // Remove element after animation
-                setTimeout(() => pop.remove(), 1400);
-            }, i * 30);
-        }
-        
-        // Clear the container after animation
-        setTimeout(() => {
-            container.classList.remove('active');
-        }, 1200);
-    }
-
-    // ========== CUSTOM CURSOR ==========
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorRing = document.querySelector('.cursor-ring');
+    // ========== CUSTOM CURSOR WITH POPCORN TRAIL ==========
+    const popcornContainer = document.getElementById('popcornContainer');
     let mouseX = 0, mouseY = 0;
-    let dotX = 0, dotY = 0;
+    let lastPopcornTime = 0;
+    const popcornDelay = 50; // milliseconds between popcorn pieces
 
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-        cursorRing.style.left = (mouseX - 20) + 'px';
-        cursorRing.style.top = (mouseY - 20) + 'px';
+        
+        // Create popcorn trail
+        const now = Date.now();
+        if (now - lastPopcornTime > popcornDelay) {
+            const pop = document.createElement('div');
+            pop.className = 'popcorn';
+            pop.textContent = '🍿';
+            pop.style.position = 'fixed';
+            pop.style.left = mouseX + 'px';
+            pop.style.top = mouseY + 'px';
+            pop.style.pointerEvents = 'none';
+            pop.style.fontSize = '20px';
+            pop.style.zIndex = '999';
+            pop.style.opacity = '0.9';
+            pop.style.animation = 'none';
+            pop.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))';
+            
+            // Random slight rotation for variation
+            pop.style.transform = `rotate(${Math.random() * 360}deg)`;
+            
+            popcornContainer.appendChild(pop);
+            lastPopcornTime = now;
+            
+            // Remove popcorn after fade
+            setTimeout(() => {
+                pop.style.transition = 'opacity 0.8s ease-out';
+                pop.style.opacity = '0';
+                setTimeout(() => pop.remove(), 800);
+            }, 200);
+        }
     });
 
-    // Smooth dot following
-    function animateDot() {
-        dotX += (mouseX - dotX) * 0.2;
-        dotY += (mouseY - dotY) * 0.2;
-        cursorDot.style.left = (dotX - 6) + 'px';
-        cursorDot.style.top = (dotY - 6) + 'px';
-        requestAnimationFrame(animateDot);
-    }
-    animateDot();
-
-    // ========== HERO POPCORN ANIMATION ==========
-    let heroPopcornTriggered = false;
-    
-    const heroSection = document.querySelector('.hero');
-    const heroObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !heroPopcornTriggered) {
-                heroPopcornTriggered = true;
-                // Trigger popcorn after a brief delay
-                setTimeout(() => throwHeroPopcorn(), 500);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    if (heroSection) {
-        heroObserver.observe(heroSection);
-    }
+    // Hide default cursor
+    document.body.style.cursor = 'none';
 
     // ========== SCROLL REVEAL ==========
     const observerOptions = {
@@ -1827,11 +1775,8 @@
         document.body.style.overflow = 'auto';
     }
 
+    // Only close modal on X button click
     modalClose.addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
 
     // Share button handler
     const shareBtn = document.getElementById('modalShareBtn');
@@ -1861,89 +1806,7 @@
         }
     });
 
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active') ) {
-            closeModal();
-        }
-    });
-
-    // ========== POPCORN ANIMATION FUNCTIONS ==========
-    function throwPopcorn() {
-        const container = document.getElementById('popcornContainer');
-        container.classList.add('active');
-        
-        // Create 40-50 popcorn pieces scattered across screen
-        for (let i = 0; i < 45; i++) {
-            setTimeout(() => {
-                const pop = document.createElement('div');
-                pop.className = 'popcorn';
-                pop.textContent = '🍿';
-                
-                // Random start position across entire viewport
-                const startX = Math.random() * window.innerWidth - window.innerWidth / 2;
-                const startY = Math.random() * window.innerHeight - window.innerHeight / 2;
-                
-                // Random throw direction - full screen spread
-                const tx = (Math.random() - 0.5) * 800;
-                const ty = -400 - Math.random() * 500;
-                
-                pop.style.left = startX + 'px';
-                pop.style.top = startY + 'px';
-                pop.style.setProperty('--tx', tx + 'px');
-                pop.style.setProperty('--ty', ty + 'px');
-                pop.style.animation = `popThrow ${1 + Math.random() * 0.5}s ease-out forwards`;
-                
-                container.appendChild(pop);
-                
-                // Remove element after animation
-                setTimeout(() => pop.remove(), 1600);
-            }, i * 25);
-        }
-        
-        // Clear the container after animation
-        setTimeout(() => {
-            container.classList.remove('active');
-        }, 1300);
-    }
-
-    function throwHeroPopcorn() {
-        const container = document.getElementById('popcornContainer');
-        container.classList.add('active');
-        
-        // Create continuous popcorn burst from hero section
-        for (let i = 0; i < 35; i++) {
-            setTimeout(() => {
-                const pop = document.createElement('div');
-                pop.className = 'popcorn';
-                pop.textContent = '🍿';
-                
-                // Start from various points in viewport
-                const startX = (Math.random() - 0.5) * window.innerWidth;
-                const startY = (Math.random() - 0.5) * 200;
-                
-                // Throw upward and outward
-                const tx = (Math.random() - 0.5) * 600;
-                const ty = -300 - Math.random() * 400;
-                
-                pop.style.left = startX + 'px';
-                pop.style.top = startY + 'px';
-                pop.style.setProperty('--tx', tx + 'px');
-                pop.style.setProperty('--ty', ty + 'px');
-                pop.style.animation = `popThrow ${0.9 + Math.random() * 0.4}s ease-out forwards`;
-                
-                container.appendChild(pop);
-                
-                // Remove element after animation
-                setTimeout(() => pop.remove(), 1400);
-            }, i * 30);
-        }
-        
-        // Clear the container after animation
-        setTimeout(() => {
-            container.classList.remove('active');
-        }, 1200);
-    }
+    // Close modal only on X button - not on Escape key
 
     // ========== CTA BUTTON ==========
     const ctaButton = document.getElementById('ctaButton');
@@ -1967,8 +1830,7 @@
             </div>
         `;
         
-        // Start popcorn throw animation
-        throwPopcorn();
+        // Start popcorn trail cursor animation
 
         try {
             // Fetch mood description
@@ -1985,8 +1847,8 @@
                 moodCardText.textContent = moodData.description;
                 moodDescription.textContent = '🎬 ' + moodData.description;
                 
-                // Keep modal open for 2 seconds before showing results
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                // Keep modal open for 5 seconds before showing results
+                await new Promise(resolve => setTimeout(resolve, 5000));
             }
 
             // Fetch films
@@ -2006,8 +1868,7 @@
             // Close mood modal and show results
             moodModal.classList.remove('active');
             
-            // Throw celebration popcorn
-            throwPopcorn();
+            // Celebration with cursor trail (handled by custom cursor)
 
             // Display results
             resultsGrid.innerHTML = '';
