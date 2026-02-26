@@ -19,7 +19,8 @@ app.use(express.json());
 // Function to fetch poster from OMDB
 async function fetchPosterFromOMDB(title, year) {
     if (!OMDB_API_KEY) {
-        return 'https://via.placeholder.com/300x450?text=No+Image';
+        console.warn('No OMDB API key found in environment');
+        return `https://via.placeholder.com/300x450?text=${encodeURIComponent(title)}`;
     }
 
     const cacheKey = `${title}-${year}`;
@@ -38,16 +39,21 @@ async function fetchPosterFromOMDB(title, year) {
             timeout: 5000
         });
 
-        let poster = 'https://via.placeholder.com/300x450?text=No+Image';
+        let poster = `https://via.placeholder.com/300x450?text=${encodeURIComponent(title)}`;
+        
         if (response.data && response.data.Poster && response.data.Poster !== 'N/A') {
-            poster = response.data.Poster;
+            // Fix CORS issue: Use proxy or CDN-friendly version
+            poster = response.data.Poster.replace('SX300', 'SX500').replace('http://', 'https://');
+            console.log(`✓ Fetched poster for ${title}: ${poster}`);
+        } else {
+            console.warn(`No poster found for ${title} (${year})`);
         }
 
         posterCache[cacheKey] = poster;
         return poster;
     } catch (error) {
         console.warn(`Could not fetch poster for ${title} (${year}):`, error.message);
-        return 'https://via.placeholder.com/300x450?text=No+Image';
+        return `https://via.placeholder.com/300x450?text=${encodeURIComponent(title)}`;
     }
 }
 
