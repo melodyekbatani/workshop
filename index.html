@@ -37,6 +37,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            cursor: none !important;
         }
 
         html, body {
@@ -194,7 +195,7 @@
 
         .eyebrow {
             font-family: var(--font-mono);
-            font-size: 9px;
+            font-size: 1.5rem;
             letter-spacing: 2px;
             color: var(--gold);
             text-transform: uppercase;
@@ -328,7 +329,7 @@
             height: 100%;
             pointer-events: none;
             z-index: 999;
-            display: none;
+            display: block;
         }
 
         .popcorn-container.active {
@@ -403,7 +404,7 @@
 
         .mood-card h3 {
             font-family: var(--font-mono);
-            font-size: 14px;
+            font-size: 1.5rem;
             letter-spacing: 2px;
             color: var(--gold);
             text-transform: uppercase;
@@ -530,7 +531,7 @@
         }
 
         .hero-tagline {
-            font-size: 14px;
+            font-size: 1.5rem;
             font-family: var(--font-mono);
             margin: 32px 0 24px;
             color: var(--gold);
@@ -541,7 +542,7 @@
         }
 
         .hero-subtitle {
-            font-size: 11px;
+            font-size: 1.5rem;
             color: var(--text-secondary);
             margin-bottom: 0;
             animation: fadeUpSlide 1s ease-out 0.4s both;
@@ -722,7 +723,7 @@
 
         .sliders-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
             gap: 36px;
         }
 
@@ -731,13 +732,17 @@
                 grid-template-columns: 1fr;
                 gap: 28px;
             }
+            
+            .slider-card {
+                padding: 32px 24px;
+            }
         }
 
         .slider-card {
             background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 40px 36px;
+            padding: 40px 40px;
             min-height: 180px;
             position: relative;
             overflow: hidden;
@@ -927,7 +932,7 @@
 
         .cta-subtext {
             margin-top: 48px;
-            font-size: 10px;
+            font-size: 1.5rem;
             color: var(--text-secondary);
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -1161,7 +1166,7 @@
             }
 
             .slider-card {
-                padding: 24px;
+                padding: 24px 16px;
             }
 
             .cta-button {
@@ -1461,80 +1466,80 @@
         </div>
 
         <div class="sliders-grid" id="slidersGrid">
-            <div class="slider-card">
+            <div class="slider-card" data-slider-index="0">
                 <div class="slider-header">
                     <div class="slider-emoji">☀️</div>
-                    <div class="slider-labels">How Emotionally Heavy Should It Be?</div>
+                    <div class="slider-labels">Do you want something uplifting or emotional?</div>
                     <div class="slider-emoji">🌑</div>
                 </div>
                 <input type="range" class="slider-track" id="weight" min="0" max="100" value="50" data-label="Weight">
                 <div class="slider-value" id="weight-value">50</div>
             </div>
 
-            <div class="slider-card">
+            <div class="slider-card hidden" data-slider-index="1">
                 <div class="slider-header">
                     <div class="slider-emoji">🐢</div>
-                    <div class="slider-labels">How Fast-Paced Should It Be?</div>
+                    <div class="slider-labels">Meditative pacing or adrenaline-fueled momentum?</div>
                     <div class="slider-emoji">🏃</div>
                 </div>
                 <input type="range" class="slider-track" id="pace" min="0" max="100" value="50" data-label="Pace">
                 <div class="slider-value" id="pace-value">50</div>
             </div>
 
-            <div class="slider-card">
+            <div class="slider-card hidden" data-slider-index="2">
                 <div class="slider-header">
                     <div class="slider-emoji">🛋️</div>
-                    <div class="slider-labels">How Intense Should It Be?</div>
+                    <div class="slider-labels">How much emotional or visceral intensity right now?</div>
                     <div class="slider-emoji">💥</div>
                 </div>
                 <input type="range" class="slider-track" id="comfort" min="0" max="100" value="50" data-label="Comfort">
                 <div class="slider-value" id="comfort-value">50</div>
             </div>
 
-            <div class="slider-card">
+            <div class="slider-card hidden" data-slider-index="3">
                 <div class="slider-header">
                     <div class="slider-emoji">🪞</div>
-                    <div class="slider-labels">How Dreamlike Should It Be?</div>
+                    <div class="slider-labels">Grounded realism or magical escape?</div>
                     <div class="slider-emoji">✨</div>
                 </div>
                 <input type="range" class="slider-track" id="reality" min="0" max="100" value="50" data-label="Reality">
                 <div class="slider-value" id="reality-value">50</div>
             </div>
 
-            <div class="slider-card">
+            <div class="slider-card hidden" data-slider-index="4">
                 <div class="slider-header">
                     <div class="slider-emoji">📼</div>
-                    <div class="slider-labels">How Modern Should It Be?</div>
+                    <div class="slider-labels">Contemporary stories or timeless classics?</div>
                     <div class="slider-emoji">🎥</div>
                 </div>
                 <input type="range" class="slider-track" id="era" min="0" max="100" value="50" data-label="Era">
                 <div class="slider-value" id="era-value">50</div>
             </div>
 
-            <div class="slider-card">
+            <div class="slider-card hidden" data-slider-index="5">
                 <div class="slider-header">
                     <div class="slider-emoji">👤</div>
-                    <div class="slider-labels">Solo Experience Or Group Vibes?</div>
+                    <div class="slider-labels">Intimate character depths or ensemble stories?</div>
                     <div class="slider-emoji">👥</div>
                 </div>
                 <input type="range" class="slider-track" id="social" min="0" max="100" value="50" data-label="Social">
                 <div class="slider-value" id="social-value">50</div>
             </div>
 
-            <div class="slider-card">
+            <div class="slider-card hidden" data-slider-index="6">
                 <div class="slider-header">
                     <div class="slider-emoji">☁️</div>
-                    <div class="slider-labels">How Uplifting Should It Be?</div>
+                    <div class="slider-labels">Hopeful resolution or ambiguous endings?</div>
                     <div class="slider-emoji">⛈️</div>
                 </div>
                 <input type="range" class="slider-track" id="tone" min="0" max="100" value="50" data-label="Tone">
                 <div class="slider-value" id="tone-value">50</div>
             </div>
 
-            <div class="slider-card">
+            <div class="slider-card hidden" data-slider-index="7">
                 <div class="slider-header">
                     <div class="slider-emoji">💬</div>
-                    <div class="slider-labels">How Much Dialogue Should It Have?</div>
+                    <div class="slider-labels">Rich dialogue or visual storytelling?</div>
                     <div class="slider-emoji">🤐</div>
                 </div>
                 <input type="range" class="slider-track" id="dialogue" min="0" max="100" value="50" data-label="Dialogue">
@@ -1551,11 +1556,10 @@
 <section class="cta-section">
     <div class="container">
         <p class="cta-copy">
-            The perfect film exists.<br>
-            Let's find it together.
+            the perfect film exist<br>
         </p>
-        <button class="cta-button" id="ctaButton">🎬 DISCOVER NOW</button>
-        <p class="cta-subtext">Curated across 847K+ films • 72 emotional dimensions • Your taste, algorithmic precision</p>
+        <button class="cta-button" id="ctaButton">🎬 DISCOVER YOUR CINEMATCH!</button>
+        <p class="cta-subtext">Curated across 847K+ films • Your taste, algorithmic precision</p>
     </div>
 </section>
 
@@ -1628,45 +1632,23 @@
 <script>
     // Popcorn functions removed - cursor trail now shows popcorn
 
-    // ========== CUSTOM CURSOR WITH POPCORN TRAIL ==========
+    // ========== CUSTOM CURSOR - POPCORN BUCKET ==========
     const popcornContainer = document.getElementById('popcornContainer');
-    let mouseX = 0, mouseY = 0;
-    let lastPopcornTime = 0;
-    const popcornDelay = 50; // milliseconds between popcorn pieces
+    
+    // Create single popcorn bucket cursor
+    const popcornBucket = document.createElement('span');
+    popcornBucket.textContent = '🍿';
+    popcornBucket.style.position = 'fixed';
+    popcornBucket.style.fontSize = '48px';
+    popcornBucket.style.pointerEvents = 'none';
+    popcornBucket.style.zIndex = '999';
+    popcornBucket.style.display = 'block';
+    popcornBucket.style.lineHeight = '1';
+    popcornContainer.appendChild(popcornBucket);
 
     document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        // Create popcorn trail
-        const now = Date.now();
-        if (now - lastPopcornTime > popcornDelay) {
-            const pop = document.createElement('div');
-            pop.className = 'popcorn';
-            pop.textContent = '🍿';
-            pop.style.position = 'fixed';
-            pop.style.left = mouseX + 'px';
-            pop.style.top = mouseY + 'px';
-            pop.style.pointerEvents = 'none';
-            pop.style.fontSize = '20px';
-            pop.style.zIndex = '999';
-            pop.style.opacity = '0.9';
-            pop.style.animation = 'none';
-            pop.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))';
-            
-            // Random slight rotation for variation
-            pop.style.transform = `rotate(${Math.random() * 360}deg)`;
-            
-            popcornContainer.appendChild(pop);
-            lastPopcornTime = now;
-            
-            // Remove popcorn after fade
-            setTimeout(() => {
-                pop.style.transition = 'opacity 0.8s ease-out';
-                pop.style.opacity = '0';
-                setTimeout(() => pop.remove(), 800);
-            }, 200);
-        }
+        popcornBucket.style.left = (e.clientX - 24) + 'px';
+        popcornBucket.style.top = (e.clientY - 24) + 'px';
     });
 
     // Hide default cursor
@@ -1736,8 +1718,26 @@
 
         slider.addEventListener('mouseup', () => {
             slider.closest('.slider-card').classList.remove('dragging');
+            
+            // Reveal next slider on change
+            revealNextSlider();
         });
     });
+
+    // ========== PROGRESSIVE SLIDER REVEAL ==========
+    let currentSliderIndex = 0;
+    const totalSliders = 8;
+
+    function revealNextSlider() {
+        if (currentSliderIndex < totalSliders - 1) {
+            const nextCard = document.querySelector(`[data-slider-index="${currentSliderIndex + 1}"]`);
+            if (nextCard && nextCard.classList.contains('hidden')) {
+                nextCard.classList.remove('hidden');
+                currentSliderIndex++;
+                nextCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    }
 
     // ========== GENRE SELECTION ==========
     let selectedGenre = 'All';
