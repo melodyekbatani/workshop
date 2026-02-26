@@ -36,12 +36,13 @@ html, body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     transition: var(--transition);
+    line-height: 1.6;
 }
 
 .viewport {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px;
     position: relative;
 }
 
@@ -81,7 +82,8 @@ html, body {
 
 .header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 80px;
+    padding-bottom: 40px;
     animation: slideDown 0.8s ease-out;
 }
 
@@ -91,36 +93,39 @@ html, body {
 }
 
 .title-main {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin: 20px 0 10px;
+    font-size: 4rem;
+    font-weight: 800;
+    margin: 0 0 20px;
     color: var(--accent);
-    letter-spacing: -1px;
+    letter-spacing: -2px;
+    line-height: 1.1;
 }
 
 .tagline {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     color: var(--text-secondary);
     margin: 0;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .subtitle {
     font-size: 1.1rem;
     color: var(--text-secondary);
-    margin: 10px 0 0;
+    margin: 15px 0 0;
+    font-weight: 500;
 }
 
 .section-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 30px;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0 0 40px;
     color: var(--text-primary);
     text-align: center;
+    letter-spacing: -0.5px;
 }
 
 .genres-section {
-    margin-bottom: 60px;
+    margin-bottom: 80px;
     animation: fadeIn 0.8s 0.2s both;
 }
 
@@ -145,7 +150,7 @@ html, body {
     color: var(--text-primary);
     cursor: pointer;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     font-family: 'Fredoka', sans-serif;
     transition: var(--transition);
     position: relative;
@@ -177,20 +182,20 @@ html, body {
 }
 
 .sliders-section {
-    margin-bottom: 60px;
+    margin-bottom: 100px;
     animation: fadeIn 0.8s 0.4s both;
 }
 
 .sliders-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
-    gap: 40px;
-    margin-bottom: 40px;
+    gap: 50px;
+    margin-bottom: 50px;
 }
 
 .slider-group {
     background: var(--bg-secondary);
-    padding: 30px;
+    padding: 40px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
     transition: var(--transition);
@@ -206,12 +211,12 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     gap: 15px;
 }
 
 .slider-emoji {
-    font-size: 1.8rem;
+    font-size: 2rem;
     animation: float 3s ease-in-out infinite;
 }
 
@@ -225,7 +230,7 @@ html, body {
 
 .slider-label {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-secondary);
     flex: 1;
     text-align: center;
@@ -239,7 +244,7 @@ html, body {
     background: linear-gradient(to right, var(--accent-light), var(--accent));
     -webkit-appearance: none;
     appearance: none;
-    margin: 20px 0;
+    margin: 25px 0;
     outline: none;
     accent-color: var(--accent);
 }
@@ -280,8 +285,8 @@ html, body {
 
 .slider-value {
     text-align: center;
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 1.2rem;
+    font-weight: 800;
     color: var(--accent);
     animation: slideIn 0.3s ease;
 }
@@ -293,10 +298,10 @@ html, body {
 
 .discover-btn {
     display: block;
-    margin: 40px auto 0;
-    padding: 18px 50px;
-    font-size: 1.2rem;
-    font-weight: 700;
+    margin: 50px auto 0;
+    padding: 20px 60px;
+    font-size: 1.3rem;
+    font-weight: 800;
     font-family: 'Fredoka', sans-serif;
     background: linear-gradient(135deg, var(--accent), #ff8a6b);
     color: white;
@@ -307,6 +312,7 @@ html, body {
     position: relative;
     overflow: hidden;
     box-shadow: 0 8px 20px rgba(212, 98, 63, 0.3);
+    letter-spacing: 0.5px;
 }
 
 .discover-btn::before {
@@ -338,6 +344,7 @@ html, body {
 
 .results-section {
     animation: slideUp 0.8s ease-out;
+    margin-top: 100px;
 }
 
 @keyframes slideUp {
@@ -347,9 +354,9 @@ html, body {
 
 .cinema-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 30px;
-    margin-top: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 35px;
+    margin-top: 40px;
 }
 
 .film-card {
@@ -361,6 +368,8 @@ html, body {
     border: 2px solid transparent;
     animation: cardSlideIn 0.5s ease-out both;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes cardSlideIn {
@@ -383,9 +392,9 @@ html, body {
 .film-card::before {
     content: '🍿';
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
+    top: 12px;
+    right: 12px;
+    font-size: 1.8rem;
     opacity: 0;
     transition: var(--transition);
     z-index: 2;
@@ -438,28 +447,33 @@ html, body {
 }
 
 .film-info {
-    padding: 20px;
+    padding: 24px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .film-title {
     font-size: 1.2rem;
-    font-weight: 700;
-    margin: 0 0 8px;
+    font-weight: 800;
+    margin: 0 0 10px;
     color: var(--text-primary);
+    line-height: 1.3;
 }
 
 .film-description {
     font-size: 0.9rem;
     color: var(--text-secondary);
     margin: 0 0 12px;
-    line-height: 1.4;
+    line-height: 1.5;
+    flex-grow: 1;
 }
 
 .film-metadata {
     font-size: 0.85rem;
     color: var(--accent);
     margin: 0;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .modal {
@@ -494,7 +508,7 @@ html, body {
     z-index: 2001;
     background: var(--bg-primary);
     border-radius: 20px;
-    max-width: 800px;
+    max-width: 700px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
@@ -523,9 +537,9 @@ html, body {
 
 .modal-body {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 30px;
-    padding: 40px;
+    padding: 50px 40px;
 }
 
 .modal-poster-section {
@@ -546,45 +560,35 @@ html, body {
 }
 
 .modal-title {
-    font-size: 2.2rem;
-    margin: 0 0 12px;
+    font-size: 2.4rem;
+    margin: 0 0 15px;
     color: var(--text-primary);
+    line-height: 1.2;
+    font-weight: 800;
 }
 
 .modal-metadata {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--accent);
-    font-weight: 600;
-    margin: 0 0 20px;
+    font-weight: 700;
+    margin: 0 0 25px;
 }
 
 .modal-description {
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 1.05rem;
+    line-height: 1.7;
     color: var(--text-secondary);
-    margin: 0 0 20px;
-}
-
-.modal-trailer {
-    margin: 20px 0;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.modal-trailer iframe {
-    width: 100%;
-    border: none;
-    border-radius: 12px;
-    height: 300px;
+    margin: 0 0 30px;
 }
 
 .modal-link {
     display: inline-block;
     color: var(--accent);
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 800;
     transition: var(--transition);
-    margin-top: 20px;
+    margin-top: 10px;
+    font-size: 1.1rem;
 }
 
 .modal-link:hover {
@@ -593,23 +597,82 @@ html, body {
 
 .footer {
     text-align: center;
-    padding: 40px 20px;
+    padding: 60px 20px;
     color: var(--text-secondary);
-    margin-top: 60px;
+    margin-top: 100px;
     border-top: 1px solid var(--border-color);
     animation: fadeIn 0.8s 0.6s both;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .viewport { padding: 30px 20px; }
+    .title-main { font-size: 3.5rem; }
+    .modal-body { padding: 40px 30px; }
+    .cinema-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 30px; }
 }
 
 @media (max-width: 768px) {
-    .title-main { font-size: 2.5rem; }
-    .modal-body { grid-template-columns: 1fr; padding: 20px; }
-    .cinema-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .viewport { padding: 25px 15px; }
+    .header { margin-bottom: 60px; padding-bottom: 30px; }
+    .title-main { font-size: 2.8rem; }
+    .section-title { font-size: 1.8rem; margin-bottom: 30px; }
+    .tagline { font-size: 1.2rem; }
+    .sliders-section { margin-bottom: 70px; }
+    .sliders-container { gap: 40px; margin-bottom: 40px; }
+    .slider-group { padding: 30px; }
+    .discover-btn { padding: 18px 50px; font-size: 1.2rem; margin-top: 40px; }
+    .cinema-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px; }
+    .modal-body { padding: 35px 25px; gap: 25px; }
+    .modal-title { font-size: 2rem; }
+    .modal-content { max-width: 90%; }
     .dark-mode-toggle { width: 45px; height: 45px; font-size: 20px; }
+    .results-section { margin-top: 80px; }
 }
 
 @media (max-width: 480px) {
-    .viewport { padding: 15px; }
-    .title-main { font-size: 2rem; }
-    .section-title { font-size: 1.5rem; }
-    .cinema-grid { grid-template-columns: 1fr; }
+    .viewport { padding: 20px 12px; }
+    .header { margin-bottom: 50px; }
+    .title-main { font-size: 2.2rem; letter-spacing: -1px; }
+    .tagline { font-size: 1rem; }
+    .subtitle { font-size: 0.95rem; }
+    .section-title { font-size: 1.5rem; margin-bottom: 25px; }
+    .genres-section { margin-bottom: 60px; }
+    .genres-container { gap: 10px; }
+    .genre-chip { padding: 10px 20px; font-size: 0.9rem; }
+    .sliders-section { margin-bottom: 60px; }
+    .sliders-container { gap: 30px; margin-bottom: 30px; }
+    .slider-group { padding: 25px; }
+    .slider-header { gap: 10px; margin-bottom: 15px; }
+    .slider-emoji { font-size: 1.5rem; }
+    .slider-label { font-size: 0.9rem; }
+    .slider-value { font-size: 1rem; }
+    .discover-btn { padding: 16px 40px; font-size: 1.1rem; margin-top: 35px; }
+    .cinema-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .film-card { border-radius: 12px; }
+    .film-info { padding: 16px; }
+    .film-title { font-size: 1rem; margin-bottom: 8px; }
+    .film-description { font-size: 0.85rem; }
+    .film-metadata { font-size: 0.8rem; }
+    .modal-body { padding: 25px 20px; }
+    .modal-title { font-size: 1.6rem; margin-bottom: 12px; }
+    .modal-metadata { font-size: 0.9rem; margin-bottom: 20px; }
+    .modal-description { font-size: 1rem; margin-bottom: 20px; }
+    .modal-content { max-width: 95%; }
+    .dark-mode-toggle { width: 42px; height: 42px; font-size: 18px; }
+    .footer { padding: 40px 15px; margin-top: 80px; }
+    .results-section { margin-top: 60px; }
+
+    .cinema-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
 }
+
+@media (max-width: 360px) {
+    .title-main { font-size: 1.8rem; }
+    .cinema-grid { grid-template-columns: 1fr; gap: 15px; }
+}
+
+
