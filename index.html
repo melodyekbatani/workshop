@@ -273,6 +273,175 @@
             50% { transform: translateY(-15px) rotate(-5deg) scaleY(1.02); }
         }
 
+        /* ========== POPCORN ANIMATIONS ========== */
+        @keyframes popThrow {
+            0% {
+                transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(var(--tx, 200px)) translateY(var(--ty, -500px)) scale(0.3) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes popBurst {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        .popcorn-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            display: none;
+        }
+
+        .popcorn-container.active {
+            display: block;
+        }
+
+        .popcorn {
+            position: absolute;
+            font-size: 32px;
+            font-weight: bold;
+            will-change: transform, opacity;
+        }
+
+        /* ========== MOOD DESCRIPTION MODAL ========== */
+        @keyframes moodReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .mood-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            backdrop-filter: blur(8px);
+        }
+
+        .mood-modal.active {
+            display: flex;
+        }
+
+        .mood-card {
+            background: var(--surface);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 60px 80px;
+            max-width: 700px;
+            text-align: center;
+            animation: moodReveal 0.6s ease-out;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(184, 37, 30, 0.4), inset 0 0 40px rgba(212, 175, 55, 0.08);
+        }
+
+        .mood-card::before {
+            content: '🎬';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-20px); }
+        }
+
+        .mood-card h3 {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .mood-card-text {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.6;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 32px;
+            min-height: 80px;
+        }
+
+        .mood-card-loading {
+            display: inline-flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .mood-card-loading span {
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        .mood-card-loading span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .mood-card-loading span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.6; }
+            50% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .mood-card {
+                padding: 40px 32px;
+                margin: 20px;
+            }
+
+            .mood-card-text {
+                font-size: 20px;
+            }
+
+            .popcorn {
+                font-size: 24px;
+            }
+        }
+
         /* ========== SCROLL REVEAL ========== */
         .scroll-reveal {
             opacity: 0;
@@ -856,21 +1025,48 @@
 
         /* ========== FOOTER ========== */
         footer {
-            background: var(--surface);
-            padding: 80px 0;
+            background: linear-gradient(180deg, var(--surface) 0%, rgba(20, 20, 20, 0.8) 100%);
+            padding: 120px 0 80px;
             text-align: center;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid var(--accent);
             font-size: 11px;
             color: var(--text-muted);
             font-family: var(--font-mono);
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+            opacity: 0.3;
         }
 
         footer p {
             margin: 0;
             line-height: 1.8;
+            position: relative;
+        }
+
+        footer p:first-child {
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--gold);
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+        }
+
+        footer p:last-child {
+            font-size: 10px;
+            color: var(--text-muted);
         }
 
         /* ========== MOBILE ========== */
@@ -971,22 +1167,49 @@
 
         .modal-body {
             display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 40px;
+            grid-template-columns: 300px 1fr;
+            gap: 48px;
             padding: 48px;
             position: relative;
+            align-items: start;
         }
 
         .modal-poster {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
+            flex-shrink: 0;
+            width: 300px;
+            height: auto;
         }
 
         .modal-poster img {
             width: 100%;
+            max-height: 450px;
             border-radius: 4px;
             box-shadow: 0 10px 40px rgba(184, 37, 30, 0.4), 0 0 60px rgba(212, 175, 55, 0.15);
+            object-fit: cover;
+        }
+
+        .modal-details {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 500px;
+            padding-right: 16px;
+        }
+
+        .modal-details::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-details::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-details::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
         }
 
         .modal-details h2 {
@@ -1027,10 +1250,20 @@
                 grid-template-columns: 1fr;
                 gap: 24px;
                 padding: 32px 24px;
+                align-items: start;
             }
 
             .modal-poster {
-                max-height: 400px;
+                width: 100%;
+                max-height: 350px;
+            }
+
+            .modal-poster img {
+                max-height: 350px;
+            }
+
+            .modal-details {
+                max-height: 300px;
             }
 
             .modal-details h2 {
@@ -1209,6 +1442,26 @@
                 <input type="range" class="slider-track" id="social" min="0" max="100" value="50" data-label="Social">
                 <div class="slider-value" id="social-value">50</div>
             </div>
+
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-emoji">☁️</div>
+                    <div class="slider-labels">How Uplifting Should It Be?</div>
+                    <div class="slider-emoji">⛈️</div>
+                </div>
+                <input type="range" class="slider-track" id="tone" min="0" max="100" value="50" data-label="Tone">
+                <div class="slider-value" id="tone-value">50</div>
+            </div>
+
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-emoji">💬</div>
+                    <div class="slider-labels">How Much Dialogue Should It Have?</div>
+                    <div class="slider-emoji">🤐</div>
+                </div>
+                <input type="range" class="slider-track" id="dialogue" min="0" max="100" value="50" data-label="Dialogue">
+                <div class="slider-value" id="dialogue-value">50</div>
+            </div>
         </div>
     </div>
 </section>
@@ -1233,6 +1486,7 @@
     <div class="container">
         <p class="eyebrow">YOUR RECOMMENDATIONS</p>
         <h2>Cinema Awaits</h2>
+        <div class="mood-description" id="moodDescription" style="display: none; margin-bottom: 60px; padding: 32px; background: var(--surface); border-left: 3px solid var(--accent); border-radius: 4px; font-size: 15px; line-height: 1.8; color: var(--text-secondary); font-style: italic;"></div>
         <div class="results-grid" id="resultsGrid"></div>
         <div style="display: flex; justify-content: center; margin-top: 80px;">
             <button class="cta-button" id="discoverMoreBtn">🎬 DISCOVER MORE MOVIES</button>
@@ -1257,6 +1511,26 @@
                 </div>
                 <p id="modalDescription"></p>
                 <p id="modalFullDescription" style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: var(--muted);"></p>
+                <button class="modal-share-btn" id="modalShareBtn" style="margin-top: 24px; padding: 12px 24px; background: var(--gold); color: var(--surface); border: none; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s ease;">
+                    📋 SHARE THIS FILM
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- POPCORN ANIMATION CONTAINER -->
+<div class="popcorn-container" id="popcornContainer"></div>
+
+<!-- MOOD DESCRIPTION MODAL -->
+<div class="mood-modal" id="moodModal">
+    <div class="mood-card">
+        <h3>YOUR MOOD TONIGHT</h3>
+        <div class="mood-card-text" id="moodCardText">
+            <div class="mood-card-loading">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
     </div>
@@ -1321,7 +1595,9 @@
         comfort: document.getElementById('comfort'),
         reality: document.getElementById('reality'),
         era: document.getElementById('era'),
-        social: document.getElementById('social')
+        social: document.getElementById('social'),
+        tone: document.getElementById('tone'),
+        dialogue: document.getElementById('dialogue')
     };
 
     const sliderValues = {
@@ -1330,7 +1606,9 @@
         comfort: 50,
         reality: 50,
         era: 50,
-        social: 50
+        social: 50,
+        tone: 50,
+        dialogue: 50
     };
 
     Object.entries(sliders).forEach(([key, slider]) => {
@@ -1377,7 +1655,10 @@
     const modalOverlay = document.getElementById('modalOverlay');
     const modalClose = document.querySelector('.modal-close');
 
+    let currentFilm = null;
+
     function openModal(film) {
+        currentFilm = film;
         document.getElementById('modalPosterImg').src = film.poster || 'https://via.placeholder.com/300x450?text=' + encodeURIComponent(film.title);
         document.getElementById('modalTitle').textContent = film.title;
         document.getElementById('modalYear').textContent = `${film.year}`;
@@ -1398,23 +1679,126 @@
         if (e.target === modal) closeModal();
     });
 
+    // Share button handler
+    const shareBtn = document.getElementById('modalShareBtn');
+    shareBtn.addEventListener('click', () => {
+        if (!currentFilm) return;
+        
+        const shareText = `Check out "${currentFilm.title}" (${currentFilm.year}) - Directed by ${currentFilm.director}. ${currentFilm.description}`;
+        
+        // Try native share API if available
+        if (navigator.share) {
+            navigator.share({
+                title: currentFilm.title,
+                text: shareText,
+                url: window.location.href
+            }).catch(err => console.log('Share cancelled'));
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(shareText).then(() => {
+                const originalText = shareBtn.textContent;
+                shareBtn.textContent = '✓ COPIED TO CLIPBOARD!';
+                shareBtn.style.background = 'var(--accent)';
+                setTimeout(() => {
+                    shareBtn.textContent = originalText;
+                    shareBtn.style.background = 'var(--gold)';
+                }, 2000);
+            });
+        }
+    });
+
     // Close on Escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
+        if (e.key === 'Escape' && modal.classList.contains('active') ) {
             closeModal();
         }
     });
+
+    // ========== POPCORN ANIMATION FUNCTIONS ==========
+    function throwPopcorn() {
+        const container = document.getElementById('popcornContainer');
+        container.classList.add('active');
+        
+        // Create 20-30 popcorn pieces
+        for (let i = 0; i < 25; i++) {
+            setTimeout(() => {
+                const pop = document.createElement('div');
+                pop.className = 'popcorn';
+                pop.textContent = '🍿';
+                
+                // Random start position around center
+                const startX = (Math.random() - 0.5) * 100;
+                const startY = (Math.random() - 0.5) * 100;
+                
+                // Random throw direction
+                const tx = (Math.random() - 0.5) * 400;
+                const ty = -200 - Math.random() * 300;
+                const rotation = Math.random() * 720;
+                
+                pop.style.left = startX + 'px';
+                pop.style.top = startY + 'px';
+                pop.style.setProperty('--tx', tx + 'px');
+                pop.style.setProperty('--ty', ty + 'px');
+                pop.style.animation = `popThrow ${0.8 + Math.random() * 0.4}s ease-out forwards`;
+                
+                container.appendChild(pop);
+                
+                // Remove element after animation
+                setTimeout(() => pop.remove(), 1200);
+            }, i * 30);
+        }
+        
+        // Clear the container after animation
+        setTimeout(() => {
+            container.classList.remove('active');
+        }, 1000);
+    }
 
     // ========== CTA BUTTON ==========
     const ctaButton = document.getElementById('ctaButton');
     const resultsSection = document.getElementById('resultsSection');
     const resultsGrid = document.getElementById('resultsGrid');
+    const moodDescription = document.getElementById('moodDescription');
+    const moodModal = document.getElementById('moodModal');
+    const moodCardText = document.getElementById('moodCardText');
 
     ctaButton.addEventListener('click', async () => {
         ctaButton.disabled = true;
         ctaButton.textContent = '🎬 SEARCHING YOUR MOOD...';
 
+        // Show mood modal with loading spinner
+        moodModal.classList.add('active');
+        moodCardText.innerHTML = `
+            <div class="mood-card-loading">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        `;
+        
+        // Start popcorn throw animation
+        throwPopcorn();
+
         try {
+            // Fetch mood description
+            const moodResponse = await fetch('http://localhost:3001/api/mood-description', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mood: sliderValues })
+            });
+
+            const moodData = await moodResponse.json();
+            
+            // Update mood modal with description
+            if (moodData.description) {
+                moodCardText.textContent = moodData.description;
+                moodDescription.textContent = '🎬 ' + moodData.description;
+                
+                // Keep modal open for 2 seconds before showing results
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+
+            // Fetch films
             const response = await fetch('http://localhost:3001/api/generate-films', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1427,6 +1811,12 @@
 
             const data = await response.json();
             const films = data.films || [];
+
+            // Close mood modal and show results
+            moodModal.classList.remove('active');
+            
+            // Throw celebration popcorn
+            throwPopcorn();
 
             // Display results
             resultsGrid.innerHTML = '';
@@ -1458,6 +1848,7 @@
             resultsSection.scrollIntoView({ behavior: 'smooth' });
         } catch (error) {
             console.error('Error:', error);
+            moodModal.classList.remove('active');
             resultsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--accent);">Connection lost. The algorithm is thinking.</p>';
             resultsSection.classList.add('active');
         }
