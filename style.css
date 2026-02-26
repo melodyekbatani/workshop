@@ -1,0 +1,499 @@
+/* ========================================
+   CINEMA — Editorial Film Discovery
+   Pentagram-inspired minimal design
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text-primary: #1a1a1a;
+    --text-secondary: #666;
+    --text-light: #999;
+    --bg-primary: #fefdfb;
+    --bg-secondary: #f5f3f0;
+    --border-color: #e8e6e3;
+    --accent: #8b7355;
+    --accent-light: #d4c5b9;
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    letter-spacing: -0.3px;
+}
+
+/* ========================================
+   VIEWPORT & LAYOUT
+   ======================================== */
+
+.viewport {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    padding: 80px 40px 60px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.title-large {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -1.2px;
+    margin-bottom: 20px;
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    letter-spacing: 0.3px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.main-content {
+    flex: 1;
+    padding: 80px 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.footer {
+    padding: 40px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-light);
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* ========================================
+   SECTIONS
+   ======================================== */
+
+section {
+    margin-bottom: 100px;
+}
+
+section:last-of-type {
+    margin-bottom: 0;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 40px;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 1px;
+    background-color: var(--accent);
+}
+
+.optional {
+    font-style: italic;
+    color: var(--text-light);
+    font-woman: 300;
+    font-size: 0.85em;
+}
+
+/* ========================================
+   SLIDERS
+   ======================================== */
+
+.sliders-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.slider-group {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 30px;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    letter-spacing: 0.4px;
+    color: var(--text-secondary);
+}
+
+.label-left,
+.label-right {
+    font-weight: 400;
+}
+
+/* Refined range input */
+input[type="range"].mood-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 1px;
+    background: var(--border-color);
+    border: none;
+    border-radius: 0;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+input[type="range"].mood-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--accent);
+    border: 2px solid var(--bg-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+}
+
+input[type="range"].mood-slider::-webkit-slider-thumb:hover {
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+input[type="range"].mood-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: var(--accent);
+    border: 2px solid var(--bg-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+}
+
+input[type="range"].mood-slider::-moz-range-thumb:hover {
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.slider-value {
+    text-align: right;
+    min-width: 60px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+/* ========================================
+   UPLOAD ZONE
+   ======================================== */
+
+.upload-zone {
+    border: 1px solid var(--accent-light);
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: var(--bg-secondary);
+}
+
+.upload-zone:hover {
+    border-color: var(--accent);
+    background-color: var(--bg-primary);
+}
+
+.upload-icon {
+    width: 40px;
+    height: 40px;
+    stroke: var(--text-light);
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
+.upload-text {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.upload-link {
+    text-decoration: underline;
+    cursor: pointer;
+    color: var(--accent);
+    transition: color 0.2s ease;
+}
+
+.upload-link:hover {
+    color: var(--text-primary);
+}
+
+.upload-caption {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    letter-spacing: 0.3px;
+}
+
+/* Upload Preview */
+.upload-preview {
+    position: relative;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.upload-preview img {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.scanning-animation {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background: var(--border-color);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.scanning-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scan 2s infinite;
+}
+
+@keyframes scan {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.scanning-text {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-style: italic;
+    letter-spacing: 0.3px;
+}
+
+/* ========================================
+   ACTION BUTTON
+   ======================================== */
+
+.action-section {
+    text-align: center;
+    margin: 60px 0;
+}
+
+.btn-discover {
+    font-family: 'Inter', sans-serif;
+    padding: 16px 48px;
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    border: 1px solid var(--accent);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.btn-discover:hover {
+    background-color: transparent;
+    color: var(--accent);
+}
+
+/* ========================================
+   RESULTS
+   ======================================== */
+
+.results-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 40px;
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.film-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    transition: all 0.3s ease;
+    animation: cardSlideIn 0.6s ease forwards;
+    opacity: 0;
+}
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.film-card:nth-child(1) { animation-delay: 0.1s; }
+.film-card:nth-child(2) { animation-delay: 0.2s; }
+.film-card:nth-child(3) { animation-delay: 0.3s; }
+.film-card:nth-child(4) { animation-delay: 0.4s; }
+.film-card:nth-child(5) { animation-delay: 0.5s; }
+.film-card:nth-child(6) { animation-delay: 0.6s; }
+
+.film-card:hover {
+    border-color: var(--accent);
+    background-color: var(--bg-primary);
+}
+
+.film-poster {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    overflow: hidden;
+}
+
+.film-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.film-info {
+    padding: 25px;
+}
+
+.film-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    letter-spacing: -0.4px;
+    color: var(--text-primary);
+}
+
+.film-description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+.film-metadata {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-bottom: 18px;
+    letter-spacing: 0.3px;
+}
+
+.film-action {
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.film-action:hover {
+    color: var(--text-primary);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .header {
+        padding: 50px 25px 40px;
+    }
+
+    .title-large {
+        font-size: 2.2rem;
+    }
+
+    .main-content {
+        padding: 50px 25px;
+    }
+
+    .slider-group {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .slider-value {
+        text-align: left;
+    }
+
+    .upload-zone {
+        padding: 40px 25px;
+    }
+
+    .results-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}

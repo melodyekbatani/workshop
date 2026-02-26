@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema — Mood-based Film Discovery</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>window.BACKEND_URL = 'http://localhost:3001';</script>
+</head>
+<body>
+    <div class="viewport">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title-large">How does tonight feel?</h1>
+                <p class="subtitle">Define your viewing conditions. We'll suggest films that match your mood.</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Mood Sliders Section -->
+            <section class="sliders-section">
+                <h2 class="section-title">Cinematic Dimensions</h2>
+                
+                <div class="sliders-container">
+                    <!-- Slider 1: Light <-> Heavy -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="label-left">Light</span>
+                            <span class="label-right">Heavy</span>
+                        </div>
+                        <input type="range" class="mood-slider" id="slider-weight" min="0" max="100" value="50" data-label="Weight">
+                        <div class="slider-value"><span id="value-weight">50</span>%</div>
+                    </div>
+
+                    <!-- Slider 2: Slow burn <-> Fast paced -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="label-left">Slow burn</span>
+                            <span class="label-right">Fast paced</span>
+                        </div>
+                        <input type="range" class="mood-slider" id="slider-pace" min="0" max="100" value="50" data-label="Pace">
+                        <div class="slider-value"><span id="value-pace">50</span>%</div>
+                    </div>
+
+                    <!-- Slider 3: Comfort <-> Challenge -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="label-left">Comfort</span>
+                            <span class="label-right">Challenge</span>
+                        </div>
+                        <input type="range" class="mood-slider" id="slider-comfort" min="0" max="100" value="50" data-label="Comfort">
+                        <div class="slider-value"><span id="value-comfort">50</span>%</div>
+                    </div>
+
+                    <!-- Slider 4: Real <-> Dreamlike -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="label-left">Real</span>
+                            <span class="label-right">Dreamlike</span>
+                        </div>
+                        <input type="range" class="mood-slider" id="slider-reality" min="0" max="100" value="50" data-label="Reality">
+                        <div class="slider-value"><span id="value-reality">50</span>%</div>
+                    </div>
+
+                    <!-- Slider 5: Classic <-> Contemporary -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="label-left">Classic</span>
+                            <span class="label-right">Contemporary</span>
+                        </div>
+                        <input type="range" class="mood-slider" id="slider-era" min="0" max="100" value="50" data-label="Era">
+                        <div class="slider-value"><span id="value-era">50</span>%</div>
+                    </div>
+
+                    <!-- Slider 6: Solo <-> Social -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="label-left">Solo</span>
+                            <span class="label-right">Social</span>
+                        </div>
+                        <input type="range" class="mood-slider" id="slider-social" min="0" max="100" value="50" data-label="Social">
+                        <div class="slider-value"><span id="value-social">50</span>%</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <h2 class="section-title">Visual Context <span class="optional">(optional)</span></h2>
+                
+                <div class="upload-zone" id="uploadZone">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2v20m-8-8h16M6 10l6-6 6 6"/>
+                    </svg>
+                    <p class="upload-text">Drop an image or <span class="upload-link">browse</span></p>
+                    <p class="upload-caption">A still, poster, or visual reference.</p>
+                    <input type="file" id="fileInput" hidden accept="image/*">
+                </div>
+
+                <div class="upload-preview" id="uploadPreview" style="display: none;">
+                    <img id="previewImage" src="" alt="Preview">
+                    <div class="scanning-animation">
+                        <div class="scanning-line"></div>
+                    </div>
+                    <p class="scanning-text">Reading visual context…</p>
+                </div>
+            </section>
+
+            <!-- Action Button -->
+            <section class="action-section">
+                <button id="discoverBtn" class="btn-discover">Discover Films</button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <h2 class="section-title">For Your Mood</h2>
+                <div class="results-container" id="resultsContainer">
+                    <!-- Films will be inserted here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Cinema — A refined film discovery experience</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
