@@ -3,164 +3,1524 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 CineMatch — Your Mood, Your Movie</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
-    <script>
-        // Get backend URL from current location
-        const host = window.location.hostname;
-        const port = 3001;
-        window.BACKEND_URL = `http://${host}:${port}`;
-    </script>
+    <title>🎬 CINEMATCH — Cinematic Film Discovery</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Syne:wght@800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========== CSS VARIABLES ========== */
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface-alt: #1f1f1f;
+            --accent: #B8251E;
+            --accent-light: #D92828;
+            --accent-muted: #7a1a14;
+            --gold: #D4AF37;
+            --gold-dark: #9d8825;
+            --white: #f5f5f5;
+            --text-secondary: #b3b3b3;
+            --text-muted: #727272;
+            --border: #2a2a2a;
+            --overlay: rgba(0, 0, 0, 0.8);
+            --intensity: 0.4;
+            
+            --font-display: 'Bebas Neue', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+            --font-mono: 'Space Mono', monospace;
+            --font-accent: 'Syne', sans-serif;
+        }
+
+        /* ========== RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background: linear-gradient(180deg, #2a1f15 0%, #1a0f08 40%, #0a0a0a 100%);
+            color: var(--white);
+            font-family: var(--font-mono);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body {
+            background-attachment: fixed;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.08) 0%, rgba(184, 37, 30, 0.05) 50%, transparent 100%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        /* ========== CUSTOM CURSOR ========== */
+        html {
+            cursor: none;
+        }
+
+        .cursor-dot {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            mix-blend-mode: screen;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+        }
+
+        .cursor-ring {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.6;
+            mix-blend-mode: screen;
+        }
+
+        /* ========== SCANLINE OVERLAY ========== */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.08),
+                rgba(0, 0, 0, 0.08) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9997;
+        }
+
+        @keyframes filmGrain {
+            0% { opacity: 0.01; }
+            50% { opacity: 0.03; }
+            100% { opacity: 0.01; }
+        }
+
+        /* ========== CONTAINER ========== */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+        }
+
+        /* ========== TYPOGRAPHY ========== */
+        h1 {
+            font-family: var(--font-mono);
+            font-size: clamp(56px, 13vw, 140px);
+            font-weight: 700;
+            letter-spacing: 4px;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: var(--font-mono);
+            font-size: clamp(36px, 10vw, 72px);
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 64px;
+            color: var(--white);
+        }
+
+        p {
+            font-family: var(--font-mono);
+            line-height: 1.6;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            font-weight: 700;
+        }
+
+        /* ========== DIVIDER ========== */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent) 20%, var(--gold) 50%, var(--accent) 80%, transparent);
+            margin: 120px 0;
+            position: relative;
+            opacity: 0.6;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: var(--gold);
+            opacity: 0.4;
+        }
+
+        .divider::before {
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeUpSlide {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glitch {
+            0%, 100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+            20% { clip-path: polygon(0 20%, 100% 0, 100% 80%, 0 100%); }
+            40% { clip-path: polygon(0 50%, 100% 30%, 100% 70%, 0 50%); }
+            60% { clip-path: polygon(0 10%, 100% 20%, 100% 90%, 0 80%); }
+            80% { clip-path: polygon(0 30%, 100% 10%, 100% 60%, 0 70%); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulseRing {
+            0%, 100% { transform: scale(0.8); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+        }
+
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scrollIndicator {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(20px); opacity: 1; }
+        }
+
+        @keyframes rotateGradient {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 360% 0%; }
+        }
+
+        @keyframes floatAscii {
+            0%, 100% { transform: translateY(0px) rotate(-5deg) scaleY(1); }
+            50% { transform: translateY(-15px) rotate(-5deg) scaleY(1.02); }
+        }
+
+        /* ========== SCROLL REVEAL ========== */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .scroll-reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 0;
+        }
+
+        .hero-ascii-pin {
+            display: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeUpSlide 1s ease-out;
+        }
+
+        .hero-title {
+            font-size: clamp(60px, 15vw, 140px);
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+
+        .title-cine {
+            background: linear-gradient(90deg, var(--gold), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-stroke: 1px var(--gold);
+            animation: glitch 0.3s ease 1 forwards;
+        }
+
+        .title-match {
+            color: var(--accent);
+            animation: glitch 0.3s ease 0.15s 1 forwards;
+        }
+
+        .hero-tagline {
+            font-size: 18px;
+            font-family: var(--font-mono);
+            margin: 24px 0;
+            color: var(--gold);
+            letter-spacing: 2px;
+            animation: fadeUpSlide 1s ease-out 0.2s both;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            animation: fadeUpSlide 1s ease-out 0.4s both;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+        .hero-pulse-ring {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            transform: translate(-50%, 50%);
+            opacity: 0.15;
+            animation: pulseRing 3s ease-in-out infinite;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            animation: fadeUpSlide 1s ease-out 0.6s both;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .scroll-line {
+            width: 2px;
+            height: 40px;
+            background: var(--gold);
+            margin: 0 auto 12px;
+            animation: scrollIndicator 2s ease-in-out infinite;
+            display: block;
+        }
+
+        .scroll-text {
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            text-align: center;
+        }
+        }
+
+        /* ========== ASCII PANELS ========== */
+        pre.ascii-art {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            line-height: 1.2;
+            color: var(--pink);
+            opacity: 0.15;
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            white-space: pre;
+            overflow: hidden;
+        }
+
+        pre.ascii-lime {
+            color: var(--lime);
+        }
+
+        /* ========== SECTION ========== */
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        /* ========== GENRE SECTION ========== */
+        .genres-section {
+            background: linear-gradient(135deg, rgba(184, 37, 30, 0.03), rgba(212, 175, 55, 0.02));
+        }
+
+        .genres-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 12px;
+            margin-top: 48px;
+        }
+
+        @media (max-width: 1024px) {
+            .genres-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .genres-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+        }
+
+        .genre-card {
+            height: 240px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .genre-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.6s;
+        }
+
+        .genre-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(184, 37, 30, 0.35), inset 0 0 20px rgba(212, 175, 55, 0.05);
+            background: var(--surface-alt);
+        }
+
+        .genre-card:hover::before {
+            opacity: 1;
+        }
+
+        .genre-card.active {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, var(--surface-alt) 0%, rgba(212, 175, 55, 0.08) 100%);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.35), inset 0 0 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .genre-emoji {
+            font-size: 60px;
+            margin-bottom: 16px;
+        }
+
+        .genre-name {
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        /* ========== VIBE SECTION ========== */
+        .vibes-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.02), rgba(184, 37, 30, 0.02));
+        }
+
+        .vibes-intro {
+            max-width: 800px;
+            margin-bottom: 56px;
+            opacity: 0.85;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .sliders-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 36px;
+        }
+
+        @media (max-width: 768px) {
+            .sliders-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+        }
+
+        .slider-card {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 32px;
+            min-height: 160px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUpSlide 0.8s ease-out backwards;
+            transition: all 0.3s ease;
+        }
+
+        .slider-card:nth-child(1) { animation-delay: 0.1s; }
+        .slider-card:nth-child(2) { animation-delay: 0.2s; }
+        .slider-card:nth-child(3) { animation-delay: 0.3s; }
+        .slider-card:nth-child(4) { animation-delay: 0.4s; }
+        .slider-card:nth-child(5) { animation-delay: 0.5s; }
+        .slider-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .slider-card.dragging {
+            border-color: var(--accent);
+            box-shadow: 0 0 40px rgba(184, 37, 30, 0.25), inset 0 0 20px rgba(212, 175, 55, 0.05);
+        }
+
+        .slider-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .slider-emoji {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--white);
+            margin-bottom: 12px;
+            flex-grow: 1;
+            font-weight: 500;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .slider-track {
+            width: 100%;
+            height: 12px;
+            background: linear-gradient(90deg, #ffffff 0%, #ffffff 50%, #ffffff 50%, #ffffff 100%);
+            border-radius: 6px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: grab;
+            margin: 16px 0;
+            box-shadow: inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .slider-track::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--white);
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            transition: all 0.2s;
+        }
+
+        .slider-track::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--white);
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 0 20px rgba(255, 45, 138, 0.5);
+        }
+
+        .slider-track:active::-webkit-slider-thumb {
+            transform: scale(1.3);
+            box-shadow: 0 0 30px rgba(255, 45, 138, 0.8);
+        }
+
+        .slider-value {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 10vw, 72px);
+            font-weight: 400;
+            color: var(--lime);
+            letter-spacing: 4px;
+            text-align: right;
+            margin-top: 16px;
+            transition: transform 0.1s;
+        }
+
+        .slider-value.pulse {
+            animation: pulse 0.3s ease-out;
+        }
+
+        @keyframes pulse {
+            50% { transform: scale(1.1); }
+        }
+
+        /* ========== CTA SECTION ========== */
+        .cta-section {
+            padding: 160px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(184, 37, 30, 0.05), rgba(212, 175, 55, 0.03));
+        }
+
+        .cta-copy {
+            font-family: var(--font-mono);
+            font-size: 36px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            color: var(--white);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cta-button {
+            padding: 18px 80px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+            font-weight: 700;
+            box-shadow: 0 10px 40px rgba(184, 37, 30, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-light), var(--accent-muted));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(184, 37, 30, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 20px rgba(184, 37, 30, 0.3);
+        }
+
+        .cta-subtext {
+            margin-top: 32px;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        /* ========== RESULTS SECTION ========== */
+        .results-section {
+            display: none;
+            padding: 120px 0;
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: 400px;
+            }
+        }
+
+        .film-card {
+            height: 400px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            animation: fadeUpSlide 0.6s ease-out backwards;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .film-card:nth-child(1) { animation-delay: 0.1s; }
+        .film-card:nth-child(2) { animation-delay: 0.2s; }
+        .film-card:nth-child(3) { animation-delay: 0.3s; }
+        .film-card:nth-child(4) { animation-delay: 0.4s; }
+        .film-card:nth-child(5) { animation-delay: 0.5s; }
+        .film-card:nth-child(6) { animation-delay: 0.6s; }
+        .film-card:nth-child(7) { animation-delay: 0.7s; }
+        .film-card:nth-child(8) { animation-delay: 0.8s; }
+
+        .film-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        .film-card:hover::before {
+            opacity: 0.15;
+        }
+
+        .film-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 15px 50px rgba(184, 37, 30, 0.25), inset 0 0 40px rgba(212, 175, 55, 0.05);
+            transform: translateY(-4px);
+        }
+
+        .film-poster {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transition: transform 0.4s ease;
+        }
+
+        .film-card:hover .film-poster {
+            transform: scale(1.05);
+        }
+
+        .film-content {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.85) 60%, rgba(10, 10, 10, 1) 100%);
+            padding: 32px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .film-title {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .film-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .film-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+
+        .film-quote {
+            font-size: 12px;
+            font-style: italic;
+            color: var(--gold);
+            opacity: 0.6;
+            padding: 12px 0;
+            border-top: 1px solid var(--accent);
+            opacity: 0.5;
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: var(--surface);
+            padding: 80px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        footer p {
+            margin: 0;
+            line-height: 1.8;
+        }
+
+        /* ========== MOBILE ========== */
+        @media (max-width: 600px) {
+            h1 { letter-spacing: 4px; }
+            h2 { letter-spacing: 2px; }
+            
+            .container {
+                padding: 0 16px;
+            }
+
+            .hero {
+                min-height: 100vh;
+            }
+
+            .sliders-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slider-card {
+                padding: 24px;
+            }
+
+            .cta-button {
+                padding: 20px 40px;
+                font-size: 16px;
+            }
+        }
+
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(184, 37, 30, 0.3), inset 0 0 40px rgba(212, 175, 55, 0.05);
+            animation: modalSlideUp 0.4s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            font-size: 36px;
+            color: var(--gold);
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s ease;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            color: var(--accent);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 40px;
+            padding: 48px;
+            position: relative;
+        }
+
+        .modal-poster {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-poster img {
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 10px 40px rgba(184, 37, 30, 0.4), 0 0 60px rgba(212, 175, 55, 0.15);
+        }
+
+        .modal-details h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            color: var(--gold);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .modal-meta span {
+            display: flex;
+            align-items: center;
+        }
+
+        #modalDescription {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        /* Mobile Modal */
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding: 32px 24px;
+            }
+
+            .modal-poster {
+                max-height: 400px;
+            }
+
+            .modal-details h2 {
+                font-size: 24px;
+            }
+
+            .modal-close {
+                top: 16px;
+                right: 16px;
+                font-size: 28px;
+            }
+
+            .modal-content {
+                width: 95%;
+                border-radius: 12px;
+            }
+        }
+
+    </style>
 </head>
 <body>
-    <div class="viewport" id="viewport">
-        <!-- Dark Mode Toggle -->
-        <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle dark mode">
-            <span class="toggle-icon">🌙</span>
-        </button>
 
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="header-top">
-                    <h1 class="title-main">🎬 CineMatch</h1>
-                    <p class="tagline">Find your vibe, find your film</p>
-                </div>
-                <p class="subtitle">Pick a mood, pick a genre, pick your next obsession</p>
-            </div>
-        </header>
+<!-- CURSORS -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Genre Selector -->
-            <section class="genres-section">
-                <h2 class="section-title">🎞️ Pick Your Genre</h2>
-                <div class="genres-container" id="genresContainer">
-                    <button class="genre-chip active" data-genre="All">📺 All</button>
-                    <button class="genre-chip" data-genre="Drama">🎭 Drama</button>
-                    <button class="genre-chip" data-genre="Action">💥 Action</button>
-                    <button class="genre-chip" data-genre="Adventure">🗺️ Adventure</button>
-                    <button class="genre-chip" data-genre="Horror">👻 Horror</button>
-                    <button class="genre-chip" data-genre="Comedy">😂 Comedy</button>
-                    <button class="genre-chip" data-genre="Thriller">🔪 Thriller</button>
-                    <button class="genre-chip" data-genre="Sci-Fi">🚀 Sci-Fi</button>
-                </div>
-            </section>
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-background"></div>
+    <div class="hero-pulse-ring"></div>
+    
+    <!-- ASCII Art: Projector -->
+    <pre class="ascii-art hero-ascii-pin">╔═══════════════════════╗
+║  ⬡ ◎ ◎ ⬡ ◎ ◎ ⬡    ║
+║     ░░░░░░░░░░     ║
+║    ░█████████░    ║
+║    █░░░░░░░░█    ║
+║    █░ ⊙ ⊙ ░░█    ║
+║    █░░━━━░░░█    ║
+║    ░█████████░    ║
+║     ░░░░░░░░░░     ║
+║  ⬡ ◎ ◎ ⬡ ◎ ◎ ⬡    ║
+╚═══════════════════════╝</pre>
 
-            <!-- Mood Sliders Section -->
-            <section class="sliders-section">
-                <h2 class="section-title">🎭 What's Your Vibe?</h2>
-                
-                <div class="sliders-container">
-                    <!-- Slider 1: Light <-> Heavy -->
-                    <div class="slider-group">
-                        <div class="slider-header">
-                            <span class="slider-emoji">☀️</span>
-                            <span class="slider-label">Light</span>
-                            <span class="slider-label">Heavy</span>
-                            <span class="slider-emoji">🌑</span>
-                        </div>
-                        <input type="range" class="mood-slider big-slider" id="slider-weight" min="0" max="100" value="50" data-label="Weight">
-                        <div class="slider-value"><span id="value-weight">50</span>%</div>
-                    </div>
-
-                    <!-- Slider 2: Slow burn <-> Fast paced -->
-                    <div class="slider-group">
-                        <div class="slider-header">
-                            <span class="slider-emoji">🐢</span>
-                            <span class="slider-label">Slow Burn</span>
-                            <span class="slider-label">Fast Paced</span>
-                            <span class="slider-emoji">⚡</span>
-                        </div>
-                        <input type="range" class="mood-slider big-slider" id="slider-pace" min="0" max="100" value="50" data-label="Pace">
-                        <div class="slider-value"><span id="value-pace">50</span>%</div>
-                    </div>
-
-                    <!-- Slider 3: Comfort <-> Challenge -->
-                    <div class="slider-group">
-                        <div class="slider-header">
-                            <span class="slider-emoji">🛋️</span>
-                            <span class="slider-label">Cozy</span>
-                            <span class="slider-label">Intense</span>
-                            <span class="slider-emoji">⛰️</span>
-                        </div>
-                        <input type="range" class="mood-slider big-slider" id="slider-comfort" min="0" max="100" value="50" data-label="Comfort">
-                        <div class="slider-value"><span id="value-comfort">50</span>%</div>
-                    </div>
-
-                    <!-- Slider 4: Real <-> Dreamlike -->
-                    <div class="slider-group">
-                        <div class="slider-header">
-                            <span class="slider-emoji">📷</span>
-                            <span class="slider-label">Real</span>
-                            <span class="slider-label">Dreamlike</span>
-                            <span class="slider-emoji">✨</span>
-                        </div>
-                        <input type="range" class="mood-slider big-slider" id="slider-reality" min="0" max="100" value="50" data-label="Reality">
-                        <div class="slider-value"><span id="value-reality">50</span>%</div>
-                    </div>
-
-                    <!-- Slider 5: Classic <-> Contemporary -->
-                    <div class="slider-group">
-                        <div class="slider-header">
-                            <span class="slider-emoji">🎞️</span>
-                            <span class="slider-label">Classic</span>
-                            <span class="slider-label">Now</span>
-                            <span class="slider-emoji">📱</span>
-                        </div>
-                        <input type="range" class="mood-slider big-slider" id="slider-era" min="0" max="100" value="50" data-label="Era">
-                        <div class="slider-value"><span id="value-era">50</span>%</div>
-                    </div>
-
-                    <!-- Slider 6: Solo <-> Social -->
-                    <div class="slider-group">
-                        <div class="slider-header">
-                            <span class="slider-emoji">🧍</span>
-                            <span class="slider-label">Alone</span>
-                            <span class="slider-label">Together</span>
-                            <span class="slider-emoji">👥</span>
-                        </div>
-                        <input type="range" class="mood-slider big-slider" id="slider-social" min="0" max="100" value="50" data-label="Social">
-                        <div class="slider-value"><span id="value-social">50</span>%</div>
-                    </div>
-                </div>
-
-                <button class="discover-btn" id="discoverBtn">🍿 Find My Film</button>
-            </section>
-
-            <!-- Results Section -->
-            <section class="results-section" id="resultsSection" style="display: none;">
-                <h2 class="section-title">Your Cinematic Picks 🎬</h2>
-                <div class="cinema-grid" id="resultsContainer"></div>
-            </section>
-        </main>
-
-        <!-- Movie Detail Modal -->
-        <div class="modal" id="movieModal">
-            <div class="modal-backdrop" id="modalBackdrop"></div>
-            <div class="modal-content">
-                <button class="modal-close" id="modalClose">&times;</button>
-                <div class="modal-body">
-                    <div class="modal-poster-section">
-                        <img id="modalPoster" src="" alt="" class="modal-poster">
-                    </div>
-                    <div class="modal-details">
-                        <h1 id="modalTitle" class="modal-title"></h1>
-                        <p id="modalMetadata" class="modal-metadata"></p>
-                        <p id="modalDescription" class="modal-description"></p>
-                        <a id="modalImdbLink" href="#" target="_blank" class="modal-link">🔗 Find on IMDb →</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>🎬 CineMatch — Mood-based film discovery. Made with 🍿 and ❤️</p>
-        </footer>
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <div class="title-cine">CINEMA</div>
+            <div class="title-match">MATCH</div>
+        </h1>
+        <p class="hero-tagline">🎬 WHAT SHOULD WE WATCH TONIGHT?</p>
+        <p class="hero-subtitle">Tell us your mood. We'll handle the rest.</p>
     </div>
 
-    <script src="script.js"></script>
+    <div class="scroll-indicator" style="display: none;">
+        <div class="scroll-line"></div>
+        <div class="scroll-text">SCROLL TO EXPLORE</div>
+    </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"></div>
+
+<!-- GENRE SECTION -->
+<section class="genres-section">
+    <div class="container">
+        <p class="eyebrow">CHOOSE A GENRE</p>
+        <h2>Set the Stage</h2>
+
+        <div class="genres-grid" id="genresGrid">
+            <div class="genre-card" data-genre="All">
+                <div class="genre-emoji">📺</div>
+                <div class="genre-name">All</div>
+            </div>
+            <div class="genre-card" data-genre="Drama">
+                <div class="genre-emoji">🎭</div>
+                <div class="genre-name">Drama</div>
+            </div>
+            <div class="genre-card" data-genre="Action">
+                <div class="genre-emoji">💥</div>
+                <div class="genre-name">Action</div>
+            </div>
+            <div class="genre-card" data-genre="Adventure">
+                <div class="genre-emoji">🗺️</div>
+                <div class="genre-name">Adventure</div>
+            </div>
+            <div class="genre-card" data-genre="Horror">
+                <div class="genre-emoji">👻</div>
+                <div class="genre-name">Horror</div>
+            </div>
+            <div class="genre-card" data-genre="Comedy">
+                <div class="genre-emoji">😂</div>
+                <div class="genre-name">Comedy</div>
+            </div>
+            <div class="genre-card" data-genre="Thriller">
+                <div class="genre-emoji">🔪</div>
+                <div class="genre-name">Thriller</div>
+            </div>
+            <div class="genre-card" data-genre="Sci-Fi">
+                <div class="genre-emoji">🚀</div>
+                <div class="genre-name">Sci-Fi</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"></div>
+
+<!-- VIBE SECTION -->
+<section class="vibes-section">
+    <div class="container">
+        <p class="eyebrow">DEFINE YOUR MOOD</p>
+        <h2>Dial Your Vibe</h2>
+        
+        <div class="vibes-intro">
+            <p>Adjust each dimension to match your emotional state. From intimate drama to immersive spectacle—we map the cinema of your mind.</p>
+        </div>
+
+        <div class="sliders-grid" id="slidersGrid">
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-emoji">☀️</div>
+                    <div class="slider-labels">How Emotionally Heavy Should It Be?</div>
+                    <div class="slider-emoji">🌑</div>
+                </div>
+                <input type="range" class="slider-track" id="weight" min="0" max="100" value="50" data-label="Weight">
+                <div class="slider-value" id="weight-value">50</div>
+            </div>
+
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-emoji">🐢</div>
+                    <div class="slider-labels">How Fast-Paced Should It Be?</div>
+                    <div class="slider-emoji">🏃</div>
+                </div>
+                <input type="range" class="slider-track" id="pace" min="0" max="100" value="50" data-label="Pace">
+                <div class="slider-value" id="pace-value">50</div>
+            </div>
+
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-emoji">🛋️</div>
+                    <div class="slider-labels">How Intense Should It Be?</div>
+                    <div class="slider-emoji">💥</div>
+                </div>
+                <input type="range" class="slider-track" id="comfort" min="0" max="100" value="50" data-label="Comfort">
+                <div class="slider-value" id="comfort-value">50</div>
+            </div>
+
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-emoji">🪞</div>
+                    <div class="slider-labels">How Dreamlike Should It Be?</div>
+                    <div class="slider-emoji">✨</div>
+                </div>
+                <input type="range" class="slider-track" id="reality" min="0" max="100" value="50" data-label="Reality">
+                <div class="slider-value" id="reality-value">50</div>
+            </div>
+
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-emoji">📼</div>
+                    <div class="slider-labels">How Modern Should It Be?</div>
+                    <div class="slider-emoji">🎥</div>
+                </div>
+                <input type="range" class="slider-track" id="era" min="0" max="100" value="50" data-label="Era">
+                <div class="slider-value" id="era-value">50</div>
+            </div>
+
+            <div class="slider-card">
+                <div class="slider-header">
+                    <div class="slider-emoji">👤</div>
+                    <div class="slider-labels">Solo Experience Or Group Vibes?</div>
+                    <div class="slider-emoji">👥</div>
+                </div>
+                <input type="range" class="slider-track" id="social" min="0" max="100" value="50" data-label="Social">
+                <div class="slider-value" id="social-value">50</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"></div>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+    <div class="container">
+        <p class="cta-copy">
+            The perfect film exists.<br>
+            Let's find it together.
+        </p>
+        <button class="cta-button" id="ctaButton">🎬 DISCOVER NOW</button>
+        <p class="cta-subtext">Curated across 847K+ films • 72 emotional dimensions • Your taste, algorithmic precision</p>
+    </div>
+</section>
+
+<!-- RESULTS SECTION -->
+<section class="results-section" id="resultsSection">
+    <div class="container">
+        <p class="eyebrow">YOUR RECOMMENDATIONS</p>
+        <h2>Cinema Awaits</h2>
+        <div class="results-grid" id="resultsGrid"></div>
+        <div style="display: flex; justify-content: center; margin-top: 80px;">
+            <button class="cta-button" id="discoverMoreBtn">🎬 DISCOVER MORE MOVIES</button>
+        </div>
+    </div>
+</section>
+
+<!-- MOVIE MODAL -->
+<div class="modal" id="movieModal">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <div class="modal-body">
+            <div class="modal-poster">
+                <img id="modalPosterImg" src="" alt="">
+            </div>
+            <div class="modal-details">
+                <h2 id="modalTitle"></h2>
+                <div class="modal-meta">
+                    <span id="modalYear"></span>
+                    <span id="modalDirector"></span>
+                </div>
+                <p id="modalDescription"></p>
+                <p id="modalFullDescription" style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: var(--muted);"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DIVIDER -->
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+    <p>🎬 CINEMATCH — PRECISION FILM DISCOVERY</p>
+    <p style="margin-top: 16px; font-size: 10px; letter-spacing: 1px;">POWERED BY ALGORITHMS • IMDB • THE MOVIE DATABASE (TMDB) • AI</p>
+</footer>
+
+<!-- SCRIPT -->
+<script>
+    // ========== CUSTOM CURSOR ==========
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorRing = document.querySelector('.cursor-ring');
+    let mouseX = 0, mouseY = 0;
+    let dotX = 0, dotY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorRing.style.left = (mouseX - 20) + 'px';
+        cursorRing.style.top = (mouseY - 20) + 'px';
+    });
+
+    // Smooth dot following
+    function animateDot() {
+        dotX += (mouseX - dotX) * 0.2;
+        dotY += (mouseY - dotY) * 0.2;
+        cursorDot.style.left = (dotX - 6) + 'px';
+        cursorDot.style.top = (dotY - 6) + 'px';
+        requestAnimationFrame(animateDot);
+    }
+    animateDot();
+
+    // ========== SCROLL REVEAL ==========
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.slider-card, .film-card').forEach(el => {
+        observer.observe(el);
+    });
+
+    // ========== SLIDER SETUP ==========
+    const sliders = {
+        weight: document.getElementById('weight'),
+        pace: document.getElementById('pace'),
+        comfort: document.getElementById('comfort'),
+        reality: document.getElementById('reality'),
+        era: document.getElementById('era'),
+        social: document.getElementById('social')
+    };
+
+    const sliderValues = {
+        weight: 50,
+        pace: 50,
+        comfort: 50,
+        reality: 50,
+        era: 50,
+        social: 50
+    };
+
+    Object.entries(sliders).forEach(([key, slider]) => {
+        slider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            sliderValues[key] = value;
+            document.getElementById(`${key}-value`).textContent = value;
+
+            // Change border color based on value
+            const card = slider.closest('.slider-card');
+            if (value < 40) {
+                card.style.borderColor = 'var(--accent)';
+            } else if (value > 60) {
+                card.style.borderColor = 'var(--gold)';
+            } else {
+                card.style.borderColor = 'var(--border)';
+            }
+        });
+
+        slider.addEventListener('mousedown', () => {
+            slider.closest('.slider-card').classList.add('dragging');
+        });
+
+        slider.addEventListener('mouseup', () => {
+            slider.closest('.slider-card').classList.remove('dragging');
+        });
+    });
+
+    // ========== GENRE SELECTION ==========
+    let selectedGenre = 'All';
+    document.querySelectorAll('.genre-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.genre-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            selectedGenre = card.dataset.genre;
+        });
+    });
+
+    // Set initial genre as active
+    document.querySelector('.genre-card[data-genre="All"]').classList.add('active');
+
+    // ========== MODAL MANAGEMENT ==========
+    const modal = document.getElementById('movieModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.querySelector('.modal-close');
+
+    function openModal(film) {
+        document.getElementById('modalPosterImg').src = film.poster || 'https://via.placeholder.com/300x450?text=' + encodeURIComponent(film.title);
+        document.getElementById('modalTitle').textContent = film.title;
+        document.getElementById('modalYear').textContent = `${film.year}`;
+        document.getElementById('modalDirector').textContent = `Directed by ${film.director}`;
+        document.getElementById('modalDescription').textContent = film.description || 'A must-watch film.';
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // ========== CTA BUTTON ==========
+    const ctaButton = document.getElementById('ctaButton');
+    const resultsSection = document.getElementById('resultsSection');
+    const resultsGrid = document.getElementById('resultsGrid');
+
+    ctaButton.addEventListener('click', async () => {
+        ctaButton.disabled = true;
+        ctaButton.textContent = '🎬 SEARCHING YOUR MOOD...';
+
+        try {
+            const response = await fetch('http://localhost:3001/api/generate-films', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mood: sliderValues,
+                    genre: selectedGenre,
+                    hasImage: false
+                })
+            });
+
+            const data = await response.json();
+            const films = data.films || [];
+
+            // Display results
+            resultsGrid.innerHTML = '';
+            films.forEach((film, index) => {
+                const card = document.createElement('div');
+                card.className = 'film-card';
+                card.style.cursor = 'pointer';
+                card.innerHTML = `
+                    <img src="${film.poster || 'https://via.placeholder.com/300x450?text=' + encodeURIComponent(film.title)}" 
+                         alt="${film.title}" class="film-poster" onerror="this.src='https://via.placeholder.com/300x450?text=' + encodeURIComponent('${film.title}');">
+                    <div class="film-content">
+                        <div class="film-title">${film.title}</div>
+                        <div class="film-meta">
+                            <span>${film.year}</span>
+                            <span>${film.director}</span>
+                        </div>
+                        <div class="film-description">${film.description}</div>
+                        <div class="film-quote">"An essential discovery"</div>
+                    </div>
+                `;
+                
+                // Add click handler to open modal
+                card.addEventListener('click', () => openModal(film));
+                
+                resultsGrid.appendChild(card);
+            });
+
+            resultsSection.classList.add('active');
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('Error:', error);
+            resultsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--accent);">Connection lost. The algorithm is thinking.</p>';
+            resultsSection.classList.add('active');
+        }
+
+        ctaButton.disabled = false;
+        ctaButton.textContent = '🎬 DISCOVER NOW';
+    });
+
+    // ========== DISCOVER MORE BUTTON ==========
+    const discoverMoreBtn = document.getElementById('discoverMoreBtn');
+
+    discoverMoreBtn.addEventListener('click', async () => {
+        discoverMoreBtn.disabled = true;
+        discoverMoreBtn.textContent = '🎬 LOADING MORE...';
+
+        try {
+            const response = await fetch('http://localhost:3001/api/generate-films', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mood: sliderValues,
+                    genre: selectedGenre,
+                    hasImage: false
+                })
+            });
+
+            const data = await response.json();
+            const films = data.films || [];
+
+            // Add more films to results (don't clear, append)
+            films.forEach((film, index) => {
+                const card = document.createElement('div');
+                card.className = 'film-card';
+                card.style.cursor = 'pointer';
+                card.innerHTML = `
+                    <img src="${film.poster || 'https://via.placeholder.com/300x450?text=' + encodeURIComponent(film.title)}" 
+                         alt="${film.title}" class="film-poster" onerror="this.src='https://via.placeholder.com/300x450?text=' + encodeURIComponent('${film.title}');">
+                    <div class="film-content">
+                        <div class="film-title">${film.title}</div>
+                        <div class="film-meta">
+                            <span>${film.year}</span>
+                            <span>${film.director}</span>
+                        </div>
+                        <div class="film-description">${film.description}</div>
+                        <div class="film-quote">"An essential discovery"</div>
+                    </div>
+                `;
+                
+                // Add click handler to open modal
+                card.addEventListener('click', () => openModal(film));
+                
+                resultsGrid.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Could not load more films. Try again.');
+        }
+
+        discoverMoreBtn.disabled = false;
+        discoverMoreBtn.textContent = '🎬 DISCOVER MORE MOVIES';
+    });
+
+</script>
+
 </body>
 </html>

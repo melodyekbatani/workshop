@@ -10,11 +10,16 @@ const PORT = process.env.PORT || 3001;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const OMDB_API_KEY = process.env.OMDB_API_KEY;
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 console.log(`🔑 OMDB API Key: ${OMDB_API_KEY ? '✓ Loaded' : '✗ Not found'}`);
+console.log(`🎬 TMDb API Key: ${TMDB_API_KEY ? '✓ Loaded' : '✗ Not found'}`);
 
 // Poster cache to avoid repeated API calls
 const posterCache = {};
+let cachedTMDbFilms = null;
+let tmdbCacheTime = 0;
+const TMDB_CACHE_DURATION = 3600000; // 1 hour in milliseconds
 
 // Middleware
 app.use(cors({
@@ -22,6 +27,53 @@ app.use(cors({
     methods: ['GET', 'POST', 'OPTIONS']
 }));
 app.use(express.json());
+
+// Function to fetch films from TMDb
+async function fetchTMDbPopularFilms() {
+    // Return cached films if within cache duration
+    if (cachedTMDbFilms && Date.now() - tmdbCacheTime < TMDB_CACHE_DURATION) {
+        return cachedTMDbFilms;
+    }
+
+    if (!TMDB_API_KEY) {
+        console.warn('No TMDb API key found');
+        return [];
+    }
+
+    try {
+        const response = await axios.get('https://api.themoviedb.org/3/movie/popular', {
+            params: {
+                api_key: TMDB_API_KEY,
+                language: 'en-US',
+                page: 1
+            },
+            timeout: 5000
+        });
+
+        const tmdbFilms = (response.data.results || [])
+            .filter(film => film.poster_path && film.release_date)
+            .slice(0, 20) // Get top 20 popular films
+            .map(film => ({
+                title: film.title,
+                description: film.overview || 'A compelling film from TMDb.',
+                year: parseInt(film.release_date.split('-')[0]),
+                director: 'Various',
+                poster: `https://image.tmdb.org/t/p/w300${film.poster_path}`,
+                source: 'tmdb',
+                // Tag films based on popularity/rating to fit mood scoring
+                tags: film.vote_average > 7 ? ['challenge'] : film.vote_average > 6 ? ['comfort'] : ['light'],
+                _tmdbId: film.id
+            }));
+
+        cachedTMDbFilms = tmdbFilms;
+        tmdbCacheTime = Date.now();
+        console.log(`✓ Fetched ${tmdbFilms.length} films from TMDb`);
+        return tmdbFilms;
+    } catch (error) {
+        console.warn('TMDb fetch error:', error.message);
+        return [];
+    }
+}
 
 // Function to fetch poster from OMDB
 async function fetchPosterFromOMDB(title, year) {
@@ -130,8 +182,12 @@ async function generateFilmSuggestions(mood) {
         { title: 'La La Land', description: 'Romance and ambition dance through a modern city.', year: 2016, director: 'Damien Chazelle', tags: ['social', 'light', 'contemporary', 'romantic'] }
     ];
 
+    // Merge with TMDb films for expanded library
+    const tmdbFilms = await fetchTMDbPopularFilms();
+    const mergedDatabase = [...filmDatabase, ...tmdbFilms];
+
     // Score films based on mood match with continuous scaling
-    const scoredFilms = filmDatabase.map(film => {
+    const scoredFilms = mergedDatabase.map(film => {
         let score = 0;
 
         // Weight: light (0-40) vs heavy (60-100)
@@ -197,6 +253,10 @@ async function generateFilmSuggestions(mood) {
     // Fetch posters for all returned films
     const filmsWithPosters = await Promise.all(
         topFilms.map(async (film) => {
+            // If film has a TMDb poster URL, use it directly; otherwise fetch from OMDB
+            if (film.poster && film.source === 'tmdb') {
+                return { ...film };
+            }
             const poster = await fetchPosterFromOMDB(film.title, film.year);
             return { ...film, poster };
         })
